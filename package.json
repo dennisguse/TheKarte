@@ -1,0 +1,16 @@
+{
+    "name": "TheKarte",
+    "version": "0.0.1",
+    "license": "MIT",
+    "repository": "https://github.com/dennisguse/TheKarte",
+    "devDependencies": {
+        "grunt": ">=1.0.1",
+        "grunt-cli": ">=1.2.0",
+        "grunt-jsbeautifier": "^0.2.13",
+        "grunt-run": "^0.8.1"
+    },
+    "dependencies": {
+        "npm": "^6.2.0",
+        "ol": "^5.1.3"
+    }
+}

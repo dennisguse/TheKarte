@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>TheKarte</title>
+        <style>
+        body {
+            margin: 0px;
+        }
+
+        body > div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+        </style>
+
+        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.1.3/build/ol.js"></script>
+        <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.1.3/css/ol.css">
+
+        <script src="src/MenuActionAbstract.js"></script>
+        <script src="src/MenuActionFeature.js"></script>
+        <script src="src/MenuActionExport.js"></script>
+        <script src="src/MenuActionHelp.js"></script>
+        <script src="src/MenuActionLayer.js"></script>
+        <script src="src/MenuActionView.js"></script>
+        <script src="src/KeyboardMenu.js"></script>
+        <script src="src/AutomaticStylerFactory.js"></script>
+        <script src="src/TheKarte.js"></script>
+    </head>
+
+    <script>
+    var theKarte;
+
+    function TheKarteLoad() {
+        theKarte = new TheKarte();
+
+        var theKarteElement = document.createElement("div");
+        document.body.append(theKarteElement);
+        theKarte.setup(theKarteElement, window);
+    }
+
+    </script>
+
+    <body onload="TheKarteLoad()">
+    </body>
+
+</html>
