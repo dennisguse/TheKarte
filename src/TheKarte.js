@@ -1,13 +1,12 @@
-/*
+/**
 @class TheKarte
-
+@constructor
 The main element of TheKarte.
 Handles the setup and configuration of all UI components.
-Also create the {@link KeyboardMeu}.
 
 In addition, some helper functions are defined.
 */
-function TheKarte() {
+function TheKarte(keyboardMenu) {
     //Setup Openlayer
     this._openlayersMap = new ol.Map({
         layers: [
@@ -30,68 +29,7 @@ function TheKarte() {
     this._layerActiveIndex = 0;
     this.layerAdd();
 
-    //Setup keyboard menu
-    this._keyboardMenu = new KeyboardMenu(
-        new Map([
-            //show menu structure
-            ['h', new MenuActionHelp(this)],
-
-            //Settings mode
-            ['s', new Map([
-                ['f', new MenuActionViewPerformance(this, true)],
-                ['p', new MenuActionViewPerformance(this, false)]
-            ])],
-
-            //Export mode
-            ['e', new Map([
-                ['a', new Map([
-                    ['g', new MenuActionExportGeoJSON(this, true)],
-                    ['k', new MenuActionExportKML(this, true)]
-                ])],
-                ['c', new Map([
-                    ['g', new MenuActionExportGeoJSON(this, false)],
-                    ['k', new MenuActionExportKML(this, false)]
-                ])],
-            ])],
-
-            //Select active layer
-            ['l', new MenuActionLayerSelect(this)],
-
-            //Insert mode
-            ['i', new Map([
-                ['l', new MenuActionLayerAdd(this)],
-                //['d', new MenuActionFeatureDND(this)],
-                ['s', new MenuActionFeatureAdd(this, 'Point')],
-                ['p', new MenuActionFeatureAdd(this, 'Polygon')],
-                ['c', new MenuActionFeatureAdd(this, 'Circle')]
-            ])],
-
-            ['m', new MenuActionFeatureModify(this)],
-
-            //Delete mode
-            ['d', new Map([
-                ['l', new MenuActionLayerDelete(this)],
-                ['f', new MenuActionFeatureDelete(this)]
-            ])],
-
-            //View mode
-            ['v', new Map([
-                ['e', new MenuActionViewExtent(this)],
-                ['t', new Map([
-                    //Change tile layer
-                    ['o', new MenuActionViewTile(this, new ol.source.OSM())],
-                    ['a', new MenuActionViewTile(this, new ol.source.XYZ({
-                        attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
-                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-                    }))],
-                    ['g', new MenuActionViewTile(this, new ol.source.TileImage({
-                        url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
-                    }))]
-                ])],
-                ['c', new MenuActionViewClusterToggle(this)]
-            ])]
-        ])
-    );
+    this._keyboardMenu = null;
 }
 TheKarte.prototype.constructor = TheKarte;
 
@@ -99,12 +37,14 @@ TheKarte.prototype.constructor = TheKarte;
 Setups TheKarte.
 Adds event listeners for keyboard and drag and drop.
 
+@param {KeyboardMenu} keyboardMenu The KeyboardMenu.
 @param {Element} parentElement The HTML element in which the map should be shown.
 @param {Element} keyEventEmitter The HTML element that gets the key events.
 */
-TheKarte.prototype.setup = function(parentElement, keyEventEmitter) {
+TheKarte.prototype.setup = function(keyboardMenu, parentElement, keyEventEmitter) {
     this._openlayersMap.setTarget(parentElement);
 
+    this._keyboardMenu = keyboardMenu;
     keyEventEmitter.onkeyup = this._keyboardMenu.handleKeypress.bind(this._keyboardMenu);
 
     parentElement.addEventListener('dragover', this._dragAndDropAllow.bind(this));

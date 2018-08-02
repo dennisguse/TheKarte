@@ -8,11 +8,12 @@
             margin: 0px;
         }
 
-        body > div {
+        body>div {
             width: 100%;
             height: 100%;
             position: absolute;
         }
+
         </style>
 
         <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.1.3/build/ol.js"></script>
@@ -35,9 +36,70 @@
     function TheKarteLoad() {
         theKarte = new TheKarte();
 
+        var keyboardMenu = new KeyboardMenu(
+            new Map([
+                //show menu structure
+                ['h', new MenuActionHelp(theKarte)],
+
+                //Settings mode
+                ['s', new Map([
+                    ['f', new MenuActionViewPerformance(theKarte, true)],
+                    ['p', new MenuActionViewPerformance(theKarte, false)]
+                ])],
+
+                //Export mode
+                ['e', new Map([
+                    ['a', new Map([
+                        ['g', new MenuActionExportGeoJSON(theKarte, true)],
+                        ['k', new MenuActionExportKML(theKarte, true)]
+                    ])],
+                    ['c', new Map([
+                        ['g', new MenuActionExportGeoJSON(theKarte, false)],
+                        ['k', new MenuActionExportKML(theKarte, false)]
+                    ])],
+                ])],
+
+                //Select active layer
+                ['l', new MenuActionLayerSelect(theKarte)],
+
+                //Insert mode
+                ['i', new Map([
+                    ['l', new MenuActionLayerAdd(theKarte)],
+                    ['s', new MenuActionFeatureAdd(theKarte, 'Point')],
+                    ['p', new MenuActionFeatureAdd(theKarte, 'Polygon')],
+                    ['c', new MenuActionFeatureAdd(theKarte, 'Circle')]
+                ])],
+
+                ['m', new MenuActionFeatureModify(theKarte)],
+
+                //Delete mode
+                ['d', new Map([
+                    ['l', new MenuActionLayerDelete(theKarte)],
+                    ['f', new MenuActionFeatureDelete(theKarte)]
+                ])],
+
+                //View mode
+                ['v', new Map([
+                    ['e', new MenuActionViewExtent(this)],
+                    ['t', new Map([
+                        //Change tile layer
+                        ['o', new MenuActionViewTile(this, new ol.source.OSM())],
+                        ['a', new MenuActionViewTile(this, new ol.source.XYZ({
+                            attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+                        }))],
+                        ['g', new MenuActionViewTile(this, new ol.source.TileImage({
+                            url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
+                        }))]
+                    ])],
+                    ['c', new MenuActionViewClusterToggle(this)]
+                ])]
+            ])
+        );
+
         var theKarteElement = document.createElement("div");
         document.body.append(theKarteElement);
-        theKarte.setup(theKarteElement, window);
+        theKarte.setup(keyboardMenu, theKarteElement, window);
     }
 
     </script>
