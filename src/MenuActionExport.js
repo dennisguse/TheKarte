@@ -41,7 +41,7 @@ Convert the @{link ol.Feature}s to string.
 @param {ol.Feature} features The features to be converted.
 */
 MenuActionExport.prototype._featuresToString = function(features) {
-    console.warn(this.constructor.name + ": shoudld be overridden.");
+    console.warn(this.constructor.name + ": should be overridden.");
 };
 MenuActionExport.prototype.toString = function() {
     return this.constructor.name + "(allFeatures: " + this._all + ")";
@@ -92,7 +92,7 @@ MenuActionExportKML.prototype._featuresToString = function(features) {
     var exportFormatter = new ol.format.KML();
     return exportFormatter.writeFeatures(
         features, {
-            featureProjection: 'EPSG:3857'
+            featureProjection: 'EPSG:4326'
         }
     );
 };

@@ -74,6 +74,7 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
 
     //Handle text/plain as WKT
     if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
+        console.log("DragAndDrop: got text. Trying to interpret as WKT.");
         let wkt = new ol.format.WKT();
 
         let content = event.dataTransfer.getData("text/plain");
@@ -81,7 +82,7 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
 
         let features = wkt.readFeatures(content, {
             dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
+            featureProjection: 'EPSG:4326'
         });
         this.getLayerActive().getSource().addFeatures(features);
     }
@@ -95,6 +96,8 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
             let suffix = files[i].name.split('.').pop();
 
             var format = null;
+            console.log("DragAndDrop: got file (" + suffix +"). Using EPSG:4326.");
+
             switch (suffix.toLowerCase()) {
                 case "gpx":
                     format = new ol.format.WKT();
@@ -126,7 +129,7 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
             reader.onload = function() {
                 let features = format.readFeatures(reader.result, {
                     dataProjection: 'EPSG:4326',
-                    featureProjection: 'EPSG:3857'
+                    featureProjection: 'EPSG:4326'
                 });
                 this.getLayerActive().getSource().addFeatures(features);
             }.bind(this);
