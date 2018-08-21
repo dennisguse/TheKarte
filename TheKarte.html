@@ -100,6 +100,12 @@
         var theKarteElement = document.createElement("div");
         document.body.append(theKarteElement);
         theKarte.setup(keyboardMenu, theKarteElement, window);
+
+        window.onbeforeunload = function(event) {
+            var text = "Do want to reload/close this application? All data will be lost.";
+            event.returnValue = text;
+            return text;
+        };
     }
 
     </script>
