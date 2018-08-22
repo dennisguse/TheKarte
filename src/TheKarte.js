@@ -186,6 +186,16 @@ TheKarte.prototype.getLayerTile = function() {
 };
 
 /**
+@param {int} idx The index of the layer to be returned.
+
+@return {ol.layer.Vector} The current active VectorLayer (i.e., the one that would be edited).
+*/
+TheKarte.prototype.getLayerByIndex = function(idx) {
+    var layer = this.getMap().getLayers().item(idx);
+    return layer instanceof ol.layer.Vector ? layer : undefined;
+};
+
+/**
 @return {ol.layer.Vector} The current active VectorLayer (i.e., the one that would be edited).
 */
 TheKarte.prototype.getLayerActive = function() {
@@ -213,7 +223,7 @@ TheKarte.prototype.layerAdd = function() {
 @param {int} index The VectorLayer to set as active (1..n).
 */
 TheKarte.prototype.layerActivate = function(index) {
-    if (1 <= index && index < this.getMap().getLayerGroup().getLength()) { //Assume tile layer to be first.
+    if (1 <= index && index < this.getMap().getLayerGroup().getLayers().getLength()) { //Assume tile layer to be first.
         this._layerActiveIndex = index;
 
         return;
