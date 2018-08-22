@@ -3,7 +3,7 @@ A menu item to draw new features into the active VectorLayer.
 
 @class MenuActionFeatureAdd
 @augments MenuActionAbstract
-@augments MenuActionOnce
+@augments MenuActionMode
 @constructor
 
 @param {string} featureType The openlayer feature to draw.
@@ -39,7 +39,7 @@ A menu item to modify existing features in the active VectorLayer.
 
 @class MenuActionFeatureAdd
 @augments MenuActionAbstract
-@augments MenuActionOnce
+@augments MenuActionMode
 @constructor
 */
 function MenuActionFeatureModify(theKarte) {
@@ -66,7 +66,7 @@ A menu item to delete features from the active VectorLayer.
 
 @class MenuActionFeatureDelete
 @augments MenuActionAbstract
-@augments MenuActionOnce
+@augments MenuActionMode
 @constructor
 */
 function MenuActionFeatureDelete(theKarte) {
