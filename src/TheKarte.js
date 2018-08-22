@@ -124,6 +124,9 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
                     continue;
                     break;
             }
+            if (format === null) {
+                continue;
+            }
 
             let reader = new FileReader();
             reader.onload = function() {
@@ -131,10 +134,11 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
                     dataProjection: 'EPSG:4326',
                     featureProjection: 'EPSG:4326'
                 });
+                console.log("DragAndDrop: read " + features.length + " features. Adding to current layer.");
                 this.getLayerActive().getSource().addFeatures(features);
             }.bind(this);
             reader.onerror = function() {
-                console.error("Error during reading: " + reader.error);
+                console.error("DragAndDrop: error reading (" + files[i].name + "): " + reader.error);
             };
             reader.readAsText(files[i]);
         }
