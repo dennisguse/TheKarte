@@ -186,6 +186,13 @@ TheKarte.prototype.getLayerTile = function() {
 };
 
 /**
+@return {int} The index of the active layer.
+*/
+TheKarte.prototype.getLayerActiveIndex = function() {
+    return this._layerActiveIndex;
+};
+
+/**
 @param {int} idx The index of the layer to be returned.
 
 @return {ol.layer.Vector} The current active VectorLayer (i.e., the one that would be edited).
@@ -240,5 +247,41 @@ TheKarte.prototype.layerDelete = function() {
 
     if (this._layerActiveIndex == 0) {
         this.layerAdd();
+    }
+};
+
+/**
+Filter features of one layer by the features (usually polygons) in another layer.
+
+@param {int} layerFeatureIndex The index of the layer to be filtered.
+@param {int} layerFilterIndex The index of the layer, which is used as filter.
+@param {boolean} isInside Should the features be within the extend?
+
+@return {Set<ol.Feature>}
+*/
+TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilterIndex, isInside) {
+    var layerFeatures = this.getLayerByIndex(layerFeatureIndex);
+    var layerFilter = this.getLayerByIndex(layerFilterIndex);
+
+    if (layerFilter === null) {
+        console.error(this.constructor.name + ": layer with index " + layerIndex + " does not exist.");
+        return;
+    }
+
+    var resultInside = new Set();
+
+    var featuresFilter = layerFilter.getSource().getFeatures();
+    for(let i = 0; i < featuresFilter.length; i++) {
+        let extend = featuresFilter[i].getGeometry().getExtent();
+        let currentResult = layerFeatures.getSource().getFeaturesInExtent(extend);
+
+        currentResult.forEach(feature => resultInside.add(feature));
+    }
+
+    if (isInside) {
+        return resultInside;
+    } else {
+        let resultOutside = new Set(layerFeatures.getSource().getFeatures().filter(feature => !resultInside.has(feature)));
+        return resultOutside;
     }
 };
