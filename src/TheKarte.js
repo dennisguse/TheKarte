@@ -55,12 +55,9 @@ TheKarte.prototype.setup = function(keyboardMenu, parentElement, keyEventEmitter
     return this._ui;
 };
 
-/**
-Print the keyboard-based menu to the console.
-*/
-TheKarte.prototype.printMenu = function() {
-    console.log(this._keyboardMenu.toString());
-}
+TheKarte.prototype.menuToString = function() {
+    return this._keyboardMenu.toString();
+};
 
 //DragAndDrop support
 TheKarte.prototype._dragAndDropAllow = function(event) {
