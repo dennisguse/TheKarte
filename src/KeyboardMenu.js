@@ -51,15 +51,15 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //Is it a regular key?
     var currentKey = event.key.toLowerCase();
     if (currentKey === null) {
-        console.warn(this.constrcutor.name + ": key " + currentKey + " not found in this (sub-)menu.");
+        console.warn(this.constructor.name + ": key " + currentKey + " not found in this (sub-)menu.");
         return;
     }
 
     var actionMapNext = actionMapSubset.get(currentKey);
     if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionAbstract) {
         if (actionMapNext instanceof MenuActionAbstract) {
-            actionMapNext.start();
             console.log(this.constructor.name + ": executing " + actionMapNext.toString());
+            actionMapNext.start();
         }
 
         if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionMode) {
