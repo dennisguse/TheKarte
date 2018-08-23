@@ -39,11 +39,11 @@ MenuActionLayerSelect.prototype.handleKeyboardEvent = function(event) {
     }
 };
 MenuActionLayerSelect.prototype.stop = function() {
-    this._theKarte.layerActivate(this._input - 1);
-    console.log(this._input - 1);
+    this._theKarte.layerActivate(this._input);
+    console.log(this.constructor.name + ": setting layer " + this._input + " active.");
 };
 MenuActionLayerSelect.prototype.abort = function() {
-    this._input = "";
+    this._input = 0;
 };
 
 /**
