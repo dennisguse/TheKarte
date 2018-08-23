@@ -144,6 +144,30 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
         }
     }
 };
+
+/**
+Exports the {@link ol.Feature}s as KML via local download.
+
+@param {array<ol.Feature>|set<ol.Feature>} features The features to be exported.
+*/
+TheKarte.prototype.exportFeatures = function(features) {
+    var exportString = new ol.format.KML().writeFeatures(
+        features, {
+            featureProjection: 'EPSG:4326'
+        }
+    );
+
+    var textFileAsBlob = new Blob([exportString], {
+        type: 'text/plain'
+    });
+    var fileNameToSaveAs = "TheKarte-" + new Date().toJSON() + ".kml";
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    downloadLink.click();
+};
+
 /**
 @returns {ol.Map} The map that is used by TheKarte.
 */

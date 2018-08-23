@@ -49,14 +49,8 @@
 
                 //Export mode
                 ['e', new Map([
-                    ['a', new Map([
-                        ['g', new MenuActionExportGeoJSON(theKarte, true)],
-                        ['k', new MenuActionExportKML(theKarte, true)]
-                    ])],
-                    ['c', new Map([
-                        ['g', new MenuActionExportGeoJSON(theKarte, false)],
-                        ['k', new MenuActionExportKML(theKarte, false)]
-                    ])],
+                    ['a', new MenuActionExportKML(theKarte, true)],
+                    ['c', new MenuActionExportKML(theKarte, false)],
                 ])],
 
                 //Select active layer
