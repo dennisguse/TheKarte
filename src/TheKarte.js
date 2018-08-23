@@ -148,11 +148,15 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
 /**
 Exports the {@link ol.Feature}s as KML via local download.
 
-@param {array<ol.Feature>|set<ol.Feature>} features The features to be exported.
+@param {Set<ol.Feature>} features The features to be exported.
 */
 TheKarte.prototype.exportFeatures = function(features) {
+    if (features === undefined || features === null || features.size === 0) {
+        console.error(this.constructor.name + ".exportFeatures(): no features to export. Will do nothing.");
+        return;
+    }
     var exportString = new ol.format.KML().writeFeatures(
-        features, {
+        Array.from(features), {
             featureProjection: 'EPSG:4326'
         }
     );
@@ -223,7 +227,7 @@ TheKarte.prototype.getLayerActiveIndex = function() {
 */
 TheKarte.prototype.getLayerByIndex = function(idx) {
     var layer = this.getMap().getLayers().item(idx);
-    return layer instanceof ol.layer.Vector ? layer : undefined;
+    return layer instanceof ol.layer.Vector ? layer : null;
 };
 
 /**
@@ -231,7 +235,7 @@ TheKarte.prototype.getLayerByIndex = function(idx) {
 */
 TheKarte.prototype.getLayerActive = function() {
     var layer = this.getMap().getLayers().item(this._layerActiveIndex);
-    return layer instanceof ol.layer.Vector ? layer : undefined;
+    return layer instanceof ol.layer.Vector ? layer : null;
 };
 
 /**
@@ -243,7 +247,7 @@ TheKarte.prototype.layerAdd = function() {
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector(),
         style: this._styler.createStyle(),
-        renderMode: this.getLayerActive() !== undefined ? this.getLayerActive().getRenderMode() : undefined
+        renderMode: this.getLayerActive() !== null ? this.getLayerActive().getRenderMode() : undefined
     });
     this._openlayersMap.addLayer(layer);
     this._layerActiveIndex += 1;
@@ -279,16 +283,26 @@ Filter features of one layer by the features (usually polygons) in another layer
 
 @param {int} layerFeatureIndex The index of the layer to be filtered.
 @param {int} layerFilterIndex The index of the layer, which is used as filter.
-@param {boolean} isInside Should the features be within the extend?
+@param {boolean} isInside Should the features be inside or outside?
 
 @return {Set<ol.Feature>}
 */
 TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilterIndex, isInside) {
+    if (layerFeatureIndex === layerFilterIndex) {
+        console.warn(this.constructor.name + ": active layer would filter itself.");
+        return new Set();
+    }
+
     var layerFeatures = this.getLayerByIndex(layerFeatureIndex);
     var layerFilter = this.getLayerByIndex(layerFilterIndex);
 
+    if (layerFeatures === null) {
+        console.error(this.constructor.name + ": layer with index " + layerFeatureIndex + " does not exist.");
+        return;
+    }
+
     if (layerFilter === null) {
-        console.error(this.constructor.name + ": layer with index " + layerIndex + " does not exist.");
+        console.error(this.constructor.name + ": layer with index " + layerFilterIndex + " does not exist.");
         return;
     }
 
@@ -302,10 +316,7 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
         currentResult.forEach(feature => resultInside.add(feature));
     }
 
-    if (isInside) {
-        return resultInside;
-    } else {
-        let resultOutside = new Set(layerFeatures.getSource().getFeatures().filter(feature => !resultInside.has(feature)));
-        return resultOutside;
-    }
+    var result = isInside ? resultInside : new Set(layerFeatures.getSource().getFeatures().filter(feature => !resultInside.has(feature)));
+
+    return result;
 };

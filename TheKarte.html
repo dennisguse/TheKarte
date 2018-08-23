@@ -66,6 +66,11 @@
 
                 ['m', new MenuActionFeatureModify(theKarte)],
 
+                ['f', new Map([
+                    ['i', new MenuActionFeatureFilter(theKarte, true)],
+                    ['o', new MenuActionFeatureFilter(theKarte, false)]
+                ])],
+
                 //Delete mode
                 ['d', new Map([
                     ['l', new MenuActionLayerDelete(theKarte)],

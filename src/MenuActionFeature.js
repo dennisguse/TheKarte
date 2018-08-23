@@ -98,3 +98,42 @@ MenuActionFeatureDelete.prototype._featureDelete = function(selectEvent) {
     this._theKarte.getLayerActive().getSource().removeFeature(selectEvent.element)
     this._interaction.getFeatures().clear();
 };
+
+/**
+A menu item to select and export features of the current layer using another layer.
+Requires entering the index of the layer used as a filter.
+
+@class MenuActionFeatureSelect
+@augments MenuActionAbstract
+@augments MenuActionMode
+@constructor
+
+@param {boolean} isInside Should the features be inside or outside?
+*/
+function MenuActionFeatureFilter(theKarte, isInside) {
+    MenuActionMode.call(this, theKarte);
+
+    this._isInside = isInside;
+    this._input = 0;
+}
+MenuActionFeatureFilter.prototype = Object.create(MenuActionMode.prototype);
+MenuActionFeatureFilter.prototype.constructor = MenuActionFeatureFilter;
+MenuActionFeatureFilter.prototype.start = function() {
+};
+MenuActionFeatureFilter.prototype.handleKeyboardEvent = function(event) {
+    var digit = event.keyCode - 48;
+    if (0 <= digit && digit <= 9) {
+        this._input = this._input * 10 + digit;
+    }
+};
+MenuActionFeatureFilter.prototype.stop = function() {
+    console.log(this.constructor.name + ": filtering layer " + this._theKarte.getLayerActiveIndex() + " using layer " + this._input);
+    var filteredFeatures = this._theKarte.featuresFilterByLayer(this._theKarte.getLayerActiveIndex(), this._input, this._isInside);
+    this._theKarte.exportFeatures(filteredFeatures);
+};
+MenuActionFeatureFilter.prototype.abort = function() {
+    this._input = 0;
+};
+MenuActionFeatureFilter.prototype.toString = function() {
+    return this.constructor.name + "(inside: " + this._isInside + ")";
+};
