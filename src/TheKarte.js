@@ -10,7 +10,9 @@ function TheKarte(keyboardMenu) {
     //Setup Openlayer
     this._openlayersMap = new ol.Map({
         layers: [
-            new ol.layer.Tile(),
+            new ol.layer.Tile({
+                preload : Infinity
+            }),
         ],
         controls: [new ol.control.ScaleLine()],
         interactions: ol.interaction.defaults({
@@ -93,7 +95,7 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
             let suffix = files[i].name.split('.').pop();
 
             var format = null;
-            console.log("DragAndDrop: got file (" + suffix +"). Using EPSG:4326.");
+            console.log("DragAndDrop: got file (" + files[i].name +"). Using EPSG:4326.");
 
             switch (suffix.toLowerCase()) {
                 case "gpx":
@@ -129,7 +131,7 @@ TheKarte.prototype._dragAndDropHandle = function(event) {
             reader.onload = function() {
                 let features = format.readFeatures(reader.result, {
                     dataProjection: 'EPSG:4326',
-                    featureProjection: 'EPSG:4326'
+                    featureProjection: 'EPSG:3857'
                 });
                 console.log("DragAndDrop: read " + features.length + " features. Adding to current layer.");
                 this.getLayerActive().getSource().addFeatures(features);
@@ -154,7 +156,8 @@ TheKarte.prototype.exportFeatures = function(features) {
     }
     var exportString = new ol.format.KML().writeFeatures(
         Array.from(features), {
-            featureProjection: 'EPSG:4326'
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
         }
     );
 
