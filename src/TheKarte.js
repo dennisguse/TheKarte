@@ -40,17 +40,17 @@ Setups TheKarte.
 Adds event listeners for keyboard and drag and drop.
 
 @param {KeyboardMenu} keyboardMenu The KeyboardMenu.
+@param {DropHandler} dragAndDropHandler The DropHandler.
 @param {Element} parentElement The HTML element in which the map should be shown.
 @param {Element} keyEventEmitter The HTML element that gets the key events.
 */
-TheKarte.prototype.setup = function(keyboardMenu, parentElement, keyEventEmitter) {
+TheKarte.prototype.setup = function(keyboardMenu, dropHandler, parentElement, keyEventEmitter) {
     this._openlayersMap.setTarget(parentElement);
 
     this._keyboardMenu = keyboardMenu;
     keyEventEmitter.onkeyup = this._keyboardMenu.handleKeypress.bind(this._keyboardMenu);
 
-    parentElement.addEventListener('dragover', this._dragAndDropAllow.bind(this));
-    parentElement.addEventListener('drop', this._dragAndDropHandle.bind(this));
+    dropHandler.setup(parentElement);
 
     this.setTileSource(new ol.source.OSM());
 
@@ -59,89 +59,6 @@ TheKarte.prototype.setup = function(keyboardMenu, parentElement, keyEventEmitter
 
 TheKarte.prototype.menuToString = function() {
     return this._keyboardMenu.toString();
-};
-
-//DragAndDrop support
-TheKarte.prototype._dragAndDropAllow = function(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-};
-
-TheKarte.prototype._dragAndDropHandle = function(event) {
-    this._dragAndDropAllow(event);
-
-    //Handle text/plain as WKT
-    if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
-        console.log("DragAndDrop: got text. Trying to interpret as WKT.");
-        let wkt = new ol.format.WKT();
-
-        let content = event.dataTransfer.getData("text/plain");
-        console.log(content);
-
-        let features = wkt.readFeatures(content, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:4326'
-        });
-        this.getLayerActive().getSource().addFeatures(features);
-    }
-
-    //Handle files by extension
-    if (event.dataTransfer.types.indexOf("Files") >= 0) {
-        var files = event.dataTransfer.files;
-
-        //Check how multiple files are handled.
-        for (let i = 0; i < files.length; i++) {
-            let suffix = files[i].name.split('.').pop();
-
-            var format = null;
-            console.log("DragAndDrop: got file (" + files[i].name +"). Using EPSG:4326.");
-
-            switch (suffix.toLowerCase()) {
-                case "gpx":
-                    format = new ol.format.WKT();
-                    break;
-
-                case "geojson":
-                case "json":
-                    format = new ol.format.GeoJSON();
-                    break;
-
-                case "kml":
-                    format = new ol.format.KML({
-                        defaultStyle: null,
-                        extractStyles: false
-                    });
-                    break;
-
-                case "wkt":
-                    format = new ol.format.WKT();
-                    break;
-
-                default:
-                    console.error("DragAndDrop: don't know how to read file with suffix: " + suffix);
-                    continue;
-                    break;
-            }
-            if (format === null) {
-                continue;
-            }
-
-            let reader = new FileReader();
-            reader.onload = function() {
-                let features = format.readFeatures(reader.result, {
-                    dataProjection: 'EPSG:4326',
-                    featureProjection: 'EPSG:3857'
-                });
-                console.log("DragAndDrop: read " + features.length + " features. Adding to current layer.");
-                this.getLayerActive().getSource().addFeatures(features);
-            }.bind(this);
-            reader.onerror = function() {
-                console.error("DragAndDrop: error reading (" + files[i].name + "): " + reader.error);
-            };
-            reader.readAsText(files[i]);
-        }
-    }
 };
 
 /**
