@@ -17,16 +17,20 @@ TheKarte presents a UI consisting of a map, which is presented in full screen.
 As expected, a user can interact with the map using his mouse or touchscreen for panning and zooming.
 
 To access more advanced functionality the _keyboard-based menu_ is available.
-This menu is navigated by pressing the adequate key to navigate lower and ESC to navigate upwards.
+This menu is navigated by pressing the adequate key to navigate lower and __ESC__ to navigate upwards.
 
-The menu structure is printed to the browser's developer console by pressing _'h'_ (top of the menu only).
+The menu is shown by pressing __'h'__ (top of the menu only) in an extra window.
 
 Functionality for data handling:
-* draw features (points and polygons),
+* draw features (circles, points and polygons),
 * delete features,
-* load features from files (via drag and drop)
+* load features from files (via drag and drop),
 * add and delete layers, and
 * exporting data via local download
+
+Functionality for styling:
+* (default) every layer is assigned a distinctive color, and
+* use image (one per layer) to represent points (via drag and drop)
 
 Functionality to change the view:
 * change background tile,
