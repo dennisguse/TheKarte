@@ -1,7 +1,7 @@
 /**
 A menu item that triggers printing the menu structure to the console and into a new window.
 
-@class MenuActionFeatureDelete
+@class MenuActionHelp
 @augments MenuActionAbstract
 @augments MenuActionOnce
 @constructor

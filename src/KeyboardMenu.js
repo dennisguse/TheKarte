@@ -1,4 +1,4 @@
-/*
+/**
 @class KeyboardMenu
 
 Is a keyboard-based menu.
@@ -7,13 +7,26 @@ Has a tree-structure with leaves of {@link MenuActionAbstract}s.
 Only one {@link MenuActionAbstract} can be in mode 'started' at any time.
 
 Only regular keys can be used as shortcuts and all keys are interpreted in lower case.
+
+@param {map<char, MenuActionAbstract | Map<...>>} actionMap The map containing the {@link MenuActionAbstract}s.
 */
 function KeyboardMenu(actionMap) {
     this._actionMap = actionMap;
+    this._userFeedbackCallback = function() {};
     this._stack = [];
 }
 KeyboardMenu.prototype.constructor = KeyboardMenu;
 
+/**
+@param {Function(boolean)}
+*/
+KeyboardMenu.prototype.setUserFeedbackCallback = function(userFeedbackCallback) {
+    if (!(userFeedbackCallback instanceof Function)) {
+        console.error(this.constructor.name + ".setUserFeedbackCallback: parameter must be a function.");
+        return;
+    }
+    this._userFeedbackCallback = userFeedbackCallback;
+}
 /**
 Handles the keypress and triggers actions if selected.
 */
@@ -27,6 +40,8 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
 
     //ENTER or ESC - leave current (sub)-menu
     if (event.code == "Escape" || event.key == "Enter") {
+        this._userFeedbackCallback(true);
+
         if (actionMapSubset instanceof MenuActionMode) {
             if (event.code == "Enter") actionMapSubset.stop();
             else actionMapSubset.abort();
@@ -39,24 +54,29 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
 
     //MenuActionMode should handle the event
     if (actionMapSubset instanceof MenuActionMode) {
+        this._userFeedbackCallback(true);
         actionMapSubset.handleKeyboardEvent(event);
         return;
     }
 
     //Could we navigate lower?
     if (!(actionMapSubset instanceof Map)) {
+        this._userFeedbackCallback(false);
         return;
     }
 
     //Is it a regular key?
     var currentKey = event.key.toLowerCase();
     if (currentKey === null) {
+        this._userFeedbackCallback(false);
         console.warn(this.constructor.name + ": key " + currentKey + " not found in this (sub-)menu.");
         return;
     }
 
     var actionMapNext = actionMapSubset.get(currentKey);
     if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionAbstract) {
+        this._userFeedbackCallback(true);
+
         if (actionMapNext instanceof MenuActionAbstract) {
             console.log(this.constructor.name + ": executing " + actionMapNext.toString());
             actionMapNext.start();
@@ -65,7 +85,10 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionMode) {
             this._stack.push(currentKey);
         }
+        return;
     }
+
+    this._userFeedbackCallback(false);
 };
 
 /**

@@ -75,9 +75,12 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
     reader.onload = function() {
         let result = reader.result;
         if (!result.startsWith("data:image/")) {
-            console.log("DropHandler: file is not an image.");
+            this._theKarte.sendUserFeedback(false);
+            console.error("DropHandler: file is not an image.");
             return;
         }
+
+        this._theKarte.sendUserFeedback(true);
         this._theKarte.getLayerActive().setStyle(function() {
             return new ol.style.Style({
               image: new ol.style.Icon({
@@ -87,6 +90,7 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
         });
     }.bind(this);
     reader.onerror = function() {
+        this._theKarte.sendUserFeedback(false);
         console.error("DropHandler: error reading (" + file.name + "): " + reader.error);
     };
     reader.readAsDataURL(file);

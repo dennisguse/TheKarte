@@ -32,6 +32,7 @@ function TheKarte(keyboardMenu) {
     this.layerAdd();
 
     this._keyboardMenu = null;
+    this._userFeedbackCallback = null;
 }
 TheKarte.prototype.constructor = TheKarte;
 
@@ -41,20 +42,38 @@ Adds event listeners for keyboard and drag and drop.
 
 @param {KeyboardMenu} keyboardMenu The KeyboardMenu.
 @param {DropHandler} dragAndDropHandler The DropHandler.
+@param {Function} userFeedbackCallback Callback to give provide user feedback.
 @param {Element} parentElement The HTML element in which the map should be shown.
 @param {Element} keyEventEmitter The HTML element that gets the key events.
 */
-TheKarte.prototype.setup = function(keyboardMenu, dropHandler, parentElement, keyEventEmitter) {
+TheKarte.prototype.setup = function(keyboardMenu, dropHandler, userFeedbackCallback, parentElement, keyEventEmitter) {
     this._openlayersMap.setTarget(parentElement);
 
     this._keyboardMenu = keyboardMenu;
+    this._keyboardMenu.setUserFeedbackCallback(this.sendUserFeedback.bind(this));
     keyEventEmitter.onkeyup = this._keyboardMenu.handleKeypress.bind(this._keyboardMenu);
 
     dropHandler.setup(parentElement);
 
+    this._userFeedbackCallback = userFeedbackCallback;
+
+
     this.setTileSource(new ol.source.OSM());
 
+
     return this._ui;
+};
+
+/**
+Provides user feedback about the success of current action.
+@param {boolean} isOk Report success or failure?
+*/
+TheKarte.prototype.sendUserFeedback = function(isOk) {
+    if (this._userFeedbackCallback == null) {
+        console.error("TheKarte.sendUserFeedbacK: callback not provided.");
+        return;
+    }
+    this._userFeedbackCallback(isOk);
 };
 
 TheKarte.prototype.menuToString = function() {

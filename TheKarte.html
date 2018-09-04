@@ -8,10 +8,47 @@
             margin: 0px;
         }
 
-        body>div {
+        #theKarteMap {
             width: 100%;
             height: 100%;
             position: absolute;
+        }
+
+        #theKarteFeedback {
+            box-sizing: border-box;
+
+            width: 100%;
+            height: 100%;
+            position: absolute;
+
+            z-index: 1;
+            opacity: 1;
+
+            pointer-events: none;
+        }
+
+        @keyframes feedbackAnimation {
+            0%   {opacity: 0}
+            50%  {opacity: 1}
+            100% {opacity: 0}
+        }
+
+        .feedbackOk {
+            animation-name: feedbackAnimation;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+
+            border: 0.25em solid;
+            border-image: radial-gradient(DeepSkyBlue, SkyBlue) 1;
+        }
+
+        .feedbackError {
+            animation-name: feedbackAnimation;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+
+            border: 0.25em solid;
+            border-image: radial-gradient(DeepPink, Pink) 1;
         }
 
         </style>
@@ -107,10 +144,22 @@
             ])
         );
 
-        var theKarteElement = document.createElement("div");
-        document.body.append(theKarteElement);
+        var theKarte_MapElement = document.createElement("div");
+        theKarte_MapElement.id = "theKarteMap";
+        document.body.append(theKarte_MapElement);
 
-        theKarte.setup(keyboardMenu, dropHandler, theKarteElement, window);
+        var theKarte_FeedbackElement = document.createElement("div");
+        theKarte_FeedbackElement.id = "theKarteFeedback";
+        document.body.append(theKarte_FeedbackElement);
+
+        var userFeedbackCallback = function(isOk) {
+            theKarte_FeedbackElement.classList.remove("feedbackOk");
+            theKarte_FeedbackElement.classList.remove("feedbackError");
+            void theKarte_FeedbackElement.offsetWidth;
+            theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
+        }.bind(this);
+
+        theKarte.setup(keyboardMenu, dropHandler, userFeedbackCallback, theKarte_MapElement, window);
 
         window.onbeforeunload = function(event) {
             var text = "Do want to reload/close this application? All data will be lost.";
