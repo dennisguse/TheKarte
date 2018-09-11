@@ -207,7 +207,7 @@ If none is left afterwards, a new VectorLayer is added.
 TheKarte.prototype.layerDelete = function() {
     this.getMap().removeLayer(this.getLayerActive());
 
-    this._layerActiveIndex = Math.min(this._layerActiveIndex, this._layers.length - 1);
+    this._layerActiveIndex = Math.min(this._layerActiveIndex, this.getMap().getLayers().getLength() - 1);
 
     if (this._layerActiveIndex == 0) {
         this.layerAdd();
