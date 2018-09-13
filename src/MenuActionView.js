@@ -92,11 +92,11 @@ MenuActionViewClusterToggle.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewClusterToggle.prototype.constructor = MenuActionViewClusterToggle;
 MenuActionViewClusterToggle.prototype.start = function() {
     var currentSource = this._theKarte.getLayerActive().getSource();
-    if (currentSource instanceof ol.source.Vector) {
+    if (currentSource instanceof ol.source.Vector && !(currentSource instanceof ol.source.Cluster)) {
         if (currentSource.getFeatures().filter(feature => {
                 !(feature instanceof ol.geom.Point)
-            }).lenght != 0) {
-            console.warn(this.constructor.name, "view can only be clustered if _only_ points are on the layer");
+            }).length != 0) {
+            console.warn(this.constructor.name, ": view can only be clustered if _only_ points are on the layer");
             return;
         }
         this._theKarte.getLayerActive().setSource(
@@ -105,12 +105,10 @@ MenuActionViewClusterToggle.prototype.start = function() {
                 distance: 40
             })
         );
-    } else
+        return;
+    }
+
     if (currentSource instanceof ol.source.Cluster) {
-        this._theKarte.getLayerActive().setSource(
-            new ol.source.Vector({
-                source: currentSource
-            })
-        );
+        this._theKarte.getLayerActive().setSource(currentSource.getSource());
     }
 };

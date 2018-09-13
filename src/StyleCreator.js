@@ -67,9 +67,9 @@ StyleCreator.prototype._createStyleRender = function(colorRGB, feature, clusterS
     }
 
     if (clusterSize > 1) {
-        style.setText(new Text({
-            text: clusterSize,
-            fill: new Fill("#fff")
+        style.setText(new ol.style.Text({
+            text: clusterSize + "",
+            fill: new ol.style.Fill({color: "#ffffff"})
         }));
     }
 
