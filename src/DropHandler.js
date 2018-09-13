@@ -81,13 +81,9 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
         }
 
         this._theKarte.sendUserFeedback(true);
-        this._theKarte.getLayerActive().setStyle(function() {
-            return new ol.style.Style({
-              image: new ol.style.Icon({
-                src: result
-              })
-            });
-        });
+
+        this._theKarte.getLayerActiveStyleContainer().setImage(result);
+        this._theKarte.getLayerActive().changed();
     }.bind(this);
     reader.onerror = function() {
         this._theKarte.sendUserFeedback(false);

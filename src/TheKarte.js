@@ -5,8 +5,19 @@ The main element of TheKarte.
 Handles the setup and configuration of all UI components.
 
 In addition, some helper functions are defined.
+
+@param {StyleCreator} styleCreator The StyleCreator.
+@param {StyleColorCreator} styleColorCreator The StyleColorCreator.
 */
-function TheKarte(keyboardMenu) {
+function TheKarte(styleCreator, styleColorCreator) {
+    this._keyboardMenu = null;
+
+    this._styleCreator = styleCreator;
+    this._styleColorCreator = styleColorCreator;
+
+    this._userFeedbackCallback = null;
+
+
     //Setup Openlayer
     this._openlayersMap = new ol.Map({
         layers: [
@@ -25,14 +36,9 @@ function TheKarte(keyboardMenu) {
         })
     });
 
-    this._styler = new AutomaticStyler(0);
-
     //Add default layer
     this._layerActiveIndex = 0;
     this.layerAdd();
-
-    this._keyboardMenu = null;
-    this._userFeedbackCallback = null;
 }
 TheKarte.prototype.constructor = TheKarte;
 
@@ -175,16 +181,31 @@ TheKarte.prototype.getLayerActive = function() {
 };
 
 /**
+@return {StyleContainer|null} The {@link StyleContainer} of current active VectorLayer (i.e., the one that would be edited).
+*/
+TheKarte.prototype.getLayerActiveStyleContainer = function() {
+    var layer = this.getLayerActive();
+    if (layer === null) {
+        return null;
+    }
+    return layer.get('styleContainer');
+};
+
+
+/**
 Add a new VectorLayer and mark it as active.
-this._styler is used to create a new style for this layer.
 RenderMode is taken from the previous active layer.
 */
 TheKarte.prototype.layerAdd = function() {
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector(),
-        style: this._styler.createStyle(),
         renderMode: this.getLayerActive() !== null ? this.getLayerActive().getRenderMode() : undefined
     });
+
+    var styleContainer = new StyleContainer(this._styleCreator, this._styleColorCreator.nextColor());
+    layer.set('styleContainer', styleContainer);
+    layer.setStyle(styleContainer.getStyleFunction());
+
     this._openlayersMap.addLayer(layer);
     this._layerActiveIndex += 1;
 };
