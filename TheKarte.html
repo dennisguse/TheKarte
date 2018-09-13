@@ -84,6 +84,8 @@
         );
         dropHandler = new DropHandler(theKarte);
 
+        defaultTileSource = new ol.source.OSM();
+
         var keyboardMenu = new KeyboardMenu(
             new Map([
                 //show menu structure
@@ -142,7 +144,7 @@
                     ['e', new MenuActionViewExtent(theKarte)],
                     ['t', new Map([
                         //Change tile layer
-                        ['o', new MenuActionViewTile(theKarte, new ol.source.OSM())],
+                        ['o', new MenuActionViewTile(theKarte, defaultTileSource)],
                         ['a', new MenuActionViewTile(theKarte, new ol.source.XYZ({
                             attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
                             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
@@ -173,6 +175,8 @@
         }.bind(this);
 
         theKarte.setup(keyboardMenu, dropHandler, userFeedbackCallback, theKarte_MapElement, window);
+
+        theKarte.setTileSource(defaultTileSource);
 
         window.onbeforeunload = function(event) {
             var text = "Do want to reload/close this application? All data will be lost.";

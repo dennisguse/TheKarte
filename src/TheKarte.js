@@ -63,10 +63,6 @@ TheKarte.prototype.setup = function(keyboardMenu, dropHandler, userFeedbackCallb
 
     this._userFeedbackCallback = userFeedbackCallback;
 
-
-    this.setTileSource(new ol.source.OSM());
-
-
     return this._ui;
 };
 
