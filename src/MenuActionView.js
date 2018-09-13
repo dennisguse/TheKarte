@@ -34,6 +34,9 @@ MenuActionViewTile.prototype.constructor = MenuActionViewTile;
 MenuActionViewTile.prototype.start = function() {
     this._theKarte.setTileSource(this._olSourceTile);
 };
+MenuActionViewTile.prototype.toString = function() {
+    return this.constructor.name + "(urls: " + this._olSourceTile.getUrls() + ")";
+}
 
 /**
 A menu item that changes the render mode of all VectorLayer.
