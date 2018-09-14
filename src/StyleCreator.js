@@ -4,8 +4,7 @@ Factory for {@link ol.style.Style}s.
 @class
 @constructor
 */
-function StyleCreator() {
-}
+function StyleCreator() {}
 StyleCreator.prototype.constructor = StyleCreator;
 
 /**
@@ -40,36 +39,38 @@ StyleCreator.prototype._createStyleRender = function(colorRGB, feature, clusterS
     let style = null;
     switch (feature.getGeometry().getType()) {
         case "Point":
-                    style = new ol.style.Style({
-                        image: new ol.style.Circle({
-                            stroke: new ol.style.Stroke({
-                                color: colorBorder,
-                                width: 1
-                            }),
-                            fill: new ol.style.Fill({
-                                color: colorFill
-                            }),
-                            radius: 5
-                        })
-                    });
-                    break;
-
-        default:
-                style = new ol.style.Style({
+            style = new ol.style.Style({
+                image: new ol.style.Circle({
                     stroke: new ol.style.Stroke({
                         color: colorBorder,
-                        width: 3
+                        width: 1
                     }),
                     fill: new ol.style.Fill({
                         color: colorFill
-                    })
+                    }),
+                    radius: 5
                 })
+            });
+            break;
+
+        default:
+            style = new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: colorBorder,
+                    width: 3
+                }),
+                fill: new ol.style.Fill({
+                    color: colorFill
+                })
+            })
     }
 
     if (clusterSize > 1) {
         style.setText(new ol.style.Text({
             text: clusterSize + "",
-            fill: new ol.style.Fill({color: "#ffffff"})
+            fill: new ol.style.Fill({
+                color: "#ffffff"
+            })
         }));
     }
 
@@ -84,9 +85,9 @@ Creates an image-based style.
 */
 StyleCreator.prototype._createStyleImage = function(imageURL, scale) {
     return new ol.style.Style({
-      image: new ol.style.Icon({
-        src: imageURL,
-        scale: scale
-      })
+        image: new ol.style.Icon({
+            src: imageURL,
+            scale: scale
+        })
     });
 };

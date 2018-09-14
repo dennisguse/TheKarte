@@ -19,6 +19,8 @@ MenuActionHelp.prototype.start = function() {
         this._window = window.open("", "TheKarte-help", "modal=yes,alwaysRaised=yes");
         this._window.document.write("<pre>" + this._theKarte.menuToString() + "</pre>");
 
-        this._window.onunload = function(event) {this._window = null;}.bind(this);
+        this._window.onunload = function(event) {
+            this._window = null;
+        }.bind(this);
     }
 };

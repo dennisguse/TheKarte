@@ -48,7 +48,7 @@ Returns the current color.
 @return {ColorRGB} The color.
 */
 StyleColorCreator.prototype.getColor = function(opacity) {
-    return  this._HSVtoColorRGB(this._h, 0.99, 0.99, opacity === undefined ? 0.5 : opacity);
+    return this._HSVtoColorRGB(this._h, 0.99, 0.99, opacity === undefined ? 0.5 : opacity);
 };
 
 /**

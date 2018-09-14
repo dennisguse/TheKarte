@@ -22,7 +22,7 @@ function TheKarte(styleCreator, styleColorCreator) {
     this._openlayersMap = new ol.Map({
         layers: [
             new ol.layer.Tile({
-                preload : Infinity
+                preload: Infinity
             }),
         ],
         controls: [new ol.control.ScaleLine()],
@@ -262,7 +262,7 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
     var resultInside = new Set();
 
     var featuresFilter = layerFilter.getSource().getFeatures();
-    for(let i = 0; i < featuresFilter.length; i++) {
+    for (let i = 0; i < featuresFilter.length; i++) {
         let extend = featuresFilter[i].getGeometry().getExtent();
         let currentResult = layerFeatures.getSource().getFeaturesInExtent(extend);
 

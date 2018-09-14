@@ -118,8 +118,7 @@ function MenuActionFeatureFilter(theKarte, isInside) {
 }
 MenuActionFeatureFilter.prototype = Object.create(MenuActionMode.prototype);
 MenuActionFeatureFilter.prototype.constructor = MenuActionFeatureFilter;
-MenuActionFeatureFilter.prototype.start = function() {
-};
+MenuActionFeatureFilter.prototype.start = function() {};
 MenuActionFeatureFilter.prototype.handleKeyboardEvent = function(event) {
     var digit = event.keyCode - 48;
     if (0 <= digit && digit <= 9) {

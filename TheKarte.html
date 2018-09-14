@@ -2,8 +2,8 @@
 <html>
 
     <head>
-      <meta charset="UTF-8">
-      <title>TheKarte</title>
+        <meta charset="UTF-8">
+        <title>TheKarte</title>
         <style>
         body {
             margin: 0px;
@@ -29,9 +29,15 @@
         }
 
         @keyframes feedbackAnimation {
-            0%   {opacity: 0}
-            50%  {opacity: 1}
-            100% {opacity: 0}
+            0% {
+                opacity: 0
+            }
+            50% {
+                opacity: 1
+            }
+            100% {
+                opacity: 0
+            }
         }
 
         .feedbackOk {
@@ -79,8 +85,7 @@
 
     function TheKarteLoad() {
         theKarte = new TheKarte(
-            new StyleCreator()
-            , new StyleColorCreator()
+            new StyleCreator(), new StyleColorCreator()
         );
         dropHandler = new DropHandler(theKarte);
 

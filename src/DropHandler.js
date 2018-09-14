@@ -69,7 +69,7 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
     }
 
     var file = event.dataTransfer.files[0];
-    console.log("DropHandler: got file (" + file.name +").");
+    console.log("DropHandler: got file (" + file.name + ").");
 
     let reader = new FileReader();
     reader.onload = function() {
@@ -124,7 +124,7 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
             let suffix = files[i].name.split('.').pop();
 
             var format = null;
-            console.log("DropHandler: got file (" + files[i].name +").");
+            console.log("DropHandler: got file (" + files[i].name + ").");
 
             switch (suffix.toLowerCase()) {
                 case "gpx":
