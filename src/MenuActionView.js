@@ -69,7 +69,7 @@ MenuActionViewPerformance.prototype.start = function() {
                 renderMode: this._shouldBeFast ? "image" : "vector" //TODO should use ol.source.VectorRenderType.VECTOR
             });
 
-            collectionLayers.setAt(i, layerNew);
+            this._theKarte.layerReplace(layerNew, i);
         }
     }
 };

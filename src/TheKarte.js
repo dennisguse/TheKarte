@@ -72,7 +72,7 @@ Provides user feedback about the success of current action.
 */
 TheKarte.prototype.sendUserFeedback = function(isOk) {
     if (this._userFeedbackCallback == null) {
-        console.error("TheKarte.sendUserFeedbacK: callback not provided.");
+        console.error(this.constructor.name + ".sendUserFeedbacK: callback not provided.");
         return;
     }
     this._userFeedbackCallback(isOk);
@@ -165,7 +165,7 @@ TheKarte.prototype.getLayerActiveIndex = function() {
 */
 TheKarte.prototype.getLayerByIndex = function(idx) {
     var layer = this.getMap().getLayers().item(idx);
-    return layer instanceof ol.layer.Vector ? layer : null;
+    return layer instanceof ol.layer.Layer ? layer : null;
 };
 
 /**
@@ -184,26 +184,49 @@ TheKarte.prototype.getLayerActiveStyleContainer = function() {
     if (layer === null) {
         return null;
     }
-    return layer.get('styleContainer');
+    return layer.get('theKarte_styleContainer');
 };
-
 
 /**
 Add a new VectorLayer and mark it as active.
 RenderMode is taken from the previous active layer.
 */
 TheKarte.prototype.layerAdd = function() {
+    var styleContainer = new StyleContainer(this._styleCreator, this._styleColorCreator.nextColor());
+
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector(),
-        renderMode: this.getLayerActive() !== null ? this.getLayerActive().getRenderMode() : undefined
-    });
+        renderMode: this.getLayerActive() !== null ? this.getLayerActive().getRenderMode() : undefined,
 
-    var styleContainer = new StyleContainer(this._styleCreator, this._styleColorCreator.nextColor());
-    layer.set('styleContainer', styleContainer);
-    layer.setStyle(styleContainer.getStyleFunction());
+        theKarte_styleContainer: styleContainer,
+        style: styleContainer.getStyleFunction()
+    });
 
     this._openlayersMap.addLayer(layer);
     this._layerActiveIndex += 1;
+};
+
+/**
+Replaces a layer.
+Transfers the styleContainer (by reference).
+
+@param {ol.layer.Layer} layerNew The replacement layer.
+@param {int} index The index of the layer to be replaced. 'undefined' to replace the active layer.
+*/
+TheKarte.prototype.layerReplace = function(layerNew, index) {
+    var layerOld;
+    if (index === -1) {
+        layerOld = this.getLayerActive();
+    } else {
+        layerOld = this.getMap().getLayerGroup().getLayers().item(index);
+    }
+    if (layerOld === null) {
+        console.error(this.constructor.name + ".layerReplace(): layer with index " + index + " does not exist.");
+        return;
+    }
+
+    layerNew.set('theKarte_styleContainer', layerOld.get('theKarte_styleContainer'));
+    this.getMap().getLayerGroup().getLayers().setAt(index, layerNew);
 };
 
 /**
