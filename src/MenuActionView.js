@@ -84,9 +84,13 @@ A menu item that toggles the clustering of points.
 @augments MenuActionAbstract
 @augments MenuActionOnce
 @constructor
+
+@param {int} clusterDistance The distance between features before they get clustered.
 */
-function MenuActionViewClusterToggle(theKarte) {
+function MenuActionViewClusterToggle(theKarte, clusterDistance) {
     MenuActionMode.call(this, theKarte);
+
+    this._clusterDistance = clusterDistance;
 }
 MenuActionViewClusterToggle.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewClusterToggle.prototype.constructor = MenuActionViewClusterToggle;
@@ -102,7 +106,7 @@ MenuActionViewClusterToggle.prototype.start = function() {
         this._theKarte.getLayerActive().setSource(
             new ol.source.Cluster({
                 source: currentSource,
-                distance: 40
+                distance: this._clusterDistance
             })
         );
         return;
