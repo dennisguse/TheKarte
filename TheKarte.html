@@ -87,9 +87,9 @@
         theKarte = new TheKarte(
             new StyleCreator(), new StyleColorCreator()
         );
-        dropHandler = new DropHandler(theKarte);
+        var dropHandler = new DropHandler(theKarte);
 
-        defaultTileSource = new ol.source.OSM();
+        var defaultTileSource = new ol.source.OSM();
 
         var keyboardMenu = new KeyboardMenu(
             new Map([
