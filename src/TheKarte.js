@@ -215,18 +215,21 @@ Transfers the styleContainer (by reference).
 */
 TheKarte.prototype.layerReplace = function(layerNew, index) {
     var layerOld;
-    if (index === -1) {
-        layerOld = this.getLayerActive();
-    } else {
+    var indexInternal = index;
+
+    if (index !== undefined) {
         layerOld = this.getMap().getLayerGroup().getLayers().item(index);
-    }
-    if (layerOld === null) {
-        console.error(this.constructor.name + ".layerReplace(): layer with index " + index + " does not exist.");
-        return;
+        if (layerOld === null) {
+            console.error(this.constructor.name + ".layerReplace(): layer with index " + index + " does not exist.");
+            return;
+        }
+    } else {
+        layerOld = this.getLayerActive();
+        indexInternal = this.getLayerActiveIndex();
     }
 
     layerNew.set('theKarte_styleContainer', layerOld.get('theKarte_styleContainer'));
-    this.getMap().getLayerGroup().getLayers().setAt(index, layerNew);
+    this.getMap().getLayerGroup().getLayers().setAt(indexInternal, layerNew);
 };
 
 /**
