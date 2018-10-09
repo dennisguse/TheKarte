@@ -80,6 +80,50 @@ MenuActionViewPerformance.prototype.toString = function() {
 };
 
 /**
+A menu item that set the current layer to be either clipping (by geometry) or not.
+
+NOTE: Re-constructs the current VectorLayer: sets renderMode:"image" as well as precompose and postcompose handlers.
+
+@class MenuActionViewClippingLayer
+@augments MenuActionAbstract
+@augments MenuActionOnce
+@constructor
+
+@param {boolean} shouldbeClipping Should the current active layer be clipping.
+
+BUG Overwrites settings set by MenuActionViewPerformance and does not restore them.
+*/
+function MenuActionViewClippingLayer(theKarte, shouldbeClipping) {
+    MenuActionMode.call(this, theKarte);
+    this._shouldbeClipping = shouldbeClipping;
+}
+MenuActionViewClippingLayer.prototype = Object.create(MenuActionOnce.prototype);
+MenuActionViewClippingLayer.prototype.constructor = MenuActionViewClippingLayer;
+MenuActionViewClippingLayer.prototype.start = function() {
+    var layer = this._theKarte.getLayerActive();
+
+    let layerNew = new ol.layer.Vector({
+          source: layer.getSource(),
+          style: layer.get('theKarte_styleContainer').getStyleFunction(),
+          renderMode: this._shouldbeClipping ? "image" : "vector" //TODO should use ol.source.VectorRenderType.VECTOR
+    });
+
+    if (this._shouldbeClipping) {
+        layerNew.on('precompose', function(e) {
+          e.context.globalCompositeOperation = 'destination-in';
+        });
+        layerNew.on('postcompose', function(e) {
+          e.context.globalCompositeOperation = 'source-over';
+        });
+        layerNew.setStyle(new ol.style.Style({fill: new ol.style.Fill({color: 'black'})}));
+    }
+    this._theKarte.layerReplace(layerNew);
+};
+MenuActionViewClippingLayer.prototype.toString = function() {
+    return this.constructor.name + "(shouldbeClipping: " + this._shouldbeClipping + ")";
+};
+
+/**
 A menu item that toggles the clustering of points.
 
 @class MenuActionViewClusterToggle

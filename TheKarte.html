@@ -147,6 +147,10 @@
                 //View mode
                 ['v', new Map([
                     ['e', new MenuActionViewExtent(theKarte)],
+                    ['f', new Map([
+                        ['i', new MenuActionViewClippingLayer(theKarte, true)],
+                        ['o', new MenuActionViewClippingLayer(theKarte, false)],
+                    ])],
                     ['t', new Map([
                         //Change tile layer
                         ['o', new MenuActionViewTile(theKarte, defaultTileSource)],
