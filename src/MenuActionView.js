@@ -99,8 +99,9 @@ MenuActionViewClusterToggle.prototype.start = function() {
     if (currentSource instanceof ol.source.Vector && !(currentSource instanceof ol.source.Cluster)) {
         if (currentSource.getFeatures().filter(feature => {
                 !(feature instanceof ol.geom.Point)
-            }).length != 0) {
+            }).length === 0) {
             console.warn(this.constructor.name, ": view can only be clustered if _only_ points are on the layer");
+            this._theKarte.sendUserFeedback(false);
             return;
         }
         this._theKarte.getLayerActive().setSource(
