@@ -27,7 +27,7 @@ function TheKarte(styleCreator, styleColorCreator) {
         ],
         controls: [new ol.control.ScaleLine()],
         interactions: ol.interaction.defaults({
-            doubleClickZoom: false,
+            doubleClickZoom: true,
             altShiftDragRotate: false
         }),
         view: new ol.View({
