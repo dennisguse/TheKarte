@@ -43,12 +43,14 @@ A menu item that changes the render mode of all VectorLayer.
 
 NOTE: Re-constructs all VectorLayers.
 
-@class MenuActionLayerSelect
+@class MenuActionViewPerformance
 @augments MenuActionAbstract
 @augments MenuActionOnce
 @constructor
 
 @param {boolean} shouldBeFast Should OpenLayers fast rendering ('image') or precise rendering ('vector') be used?
+
+BUG Overwrites settings required for MenuActionViewClippingLayer.
 */
 function MenuActionViewPerformance(theKarte, shouldBeFast) {
     MenuActionMode.call(this, theKarte);
