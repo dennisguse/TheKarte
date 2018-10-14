@@ -92,81 +92,85 @@
         var defaultTileSource = new ol.source.OSM();
 
         var keyboardMenu = new KeyboardMenu(
-            "Enter",
-            "Escape",
+            "g",
+            "v",
 
             new Map([
                 //show menu structure
                 ['h', new MenuActionHelp(theKarte)],
 
-                //Settings mode
-                ['s', new Map([
-                    ['f', new MenuActionViewPerformance(theKarte, true)],
-                    ['p', new MenuActionViewPerformance(theKarte, false)]
-                ])],
-
-                //Export mode
-                ['e', new Map([
-                    ['a', new MenuActionExportKML(theKarte, true)],
-                    ['c', new MenuActionExportKML(theKarte, false)],
-                ])],
-
-                //Select active layer
-                ['l', new MenuActionLayerSelect(theKarte)],
-
-                //Insert mode
-                ['i', new Map([
-                    ['l', new MenuActionLayerAdd(theKarte)],
+                //Insert
+                ['a', new Map([
+                    ['a', new MenuActionLayerAdd(theKarte)],
                     ['s', new MenuActionFeatureAdd(theKarte, 'Point')],
-                    ['p', new MenuActionFeatureAdd(theKarte, 'Polygon')],
-                    ['c', new MenuActionFeatureAdd(theKarte, 'Circle')]
+                    ['d', new MenuActionFeatureAdd(theKarte, 'Polygon')],
+                    ['f', new MenuActionFeatureAdd(theKarte, 'Circle')]
                 ])],
 
-                ['m', new MenuActionFeatureModify(theKarte)],
-
-                ['f', new Map([
-                    ['i', new MenuActionFeatureFilter(theKarte, true)],
-                    ['o', new MenuActionFeatureFilter(theKarte, false)]
+                //Delete
+                ['s', new Map([
+                    ['a', new MenuActionLayerDelete(theKarte)],
+                    ['s', new MenuActionFeatureDelete(theKarte)]
                 ])],
 
-                //Delete mode
+                //Select and modify
                 ['d', new Map([
-                    ['l', new MenuActionLayerDelete(theKarte)],
-                    ['f', new MenuActionFeatureDelete(theKarte)]
+                    ['a', new MenuActionLayerSelect(theKarte)],
+                    ['s', new MenuActionFeatureModify(theKarte)]
                 ])],
 
-                //Style: image zoom
-                ['o', new Map([
-                    ['a', new MenuActionViewStyleImageScale(theKarte, 0.1)],
-                    ['b', new MenuActionViewStyleImageScale(theKarte, -0.1)],
+                //Style
+                ['f', new Map([
+                    ['a', new MenuActionViewExtent(theKarte)],
+
+                    ['s', new Map([
+                        ['d', new MenuActionViewClippingLayer(theKarte, true)],
+                        ['f', new MenuActionViewClippingLayer(theKarte, false)]
+                    ])],
+
+                    ['d', new Map([
+                        ['d', new MenuActionViewStyleImageScale(theKarte, 0.1)],
+                        ['f', new MenuActionViewStyleImageScale(theKarte, -0.1)],
+                    ])],
+
+                    ['f', new MenuActionViewClusterToggle(theKarte, 40)]
+                ])],
+
+                //Map style: set tile layer
+                ['q', new Map([
+                    ['a', new MenuActionViewTile(theKarte, defaultTileSource)],
+                    ['s', new MenuActionViewTile(theKarte, new ol.source.XYZ({
+                        attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+                    }))],
+                    ['d', new MenuActionViewTile(theKarte, new ol.source.TileImage({
+                        attributions: 'Tiles  © <a href="https://www.google.com/permissions/geoguidelines/">Google</a>',
+                        url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
+                    }))]
+                ])],
+
+                //Export
+                ['w', new Map([
+                    ['a', new Map([
+                        ['d', new MenuActionExportKML(theKarte, true)],
+                        ['f', new MenuActionExportKML(theKarte, false)]
+                    ])],
+                    ['s', new Map([
+                        ['d', new MenuActionFeatureFilter(theKarte, false)],
+                        ['f', new MenuActionFeatureFilter(theKarte, true)]
+                    ])]
                 ])],
 
                 //Drop mode
-                ['w', new Map([
-                    ['g', new MenuActionDrop(theKarte, dropHandler, 'geo')],
-                    ['s', new MenuActionDrop(theKarte, dropHandler, 'style')],
+                ['e', new Map([
+                    ['d', new MenuActionDrop(theKarte, dropHandler, 'geo')],
+                    ['f', new MenuActionDrop(theKarte, dropHandler, 'style')],
                 ])],
 
-                //View mode
-                ['v', new Map([
-                    ['e', new MenuActionViewExtent(theKarte)],
-                    ['f', new Map([
-                        ['i', new MenuActionViewClippingLayer(theKarte, true)],
-                        ['o', new MenuActionViewClippingLayer(theKarte, false)],
-                    ])],
-                    ['t', new Map([
-                        //Change tile layer
-                        ['o', new MenuActionViewTile(theKarte, defaultTileSource)],
-                        ['a', new MenuActionViewTile(theKarte, new ol.source.XYZ({
-                            attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
-                            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-                        }))],
-                        ['g', new MenuActionViewTile(theKarte, new ol.source.TileImage({
-                            attributions: 'Tiles  © <a href="https://www.google.com/permissions/geoguidelines/">Google</a>',
-                            url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
-                        }))]
-                    ])],
-                    ['c', new MenuActionViewClusterToggle(theKarte, 40)]
+                //Render mode
+                ['r', new Map([
+                    ['d', new MenuActionViewPerformance(theKarte, true)],
+                    ['f', new MenuActionViewPerformance(theKarte, false)]
                 ])]
             ])
         );
