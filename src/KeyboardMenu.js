@@ -8,10 +8,16 @@ Only one {@link MenuActionAbstract} can be in mode 'started' at any time.
 
 Only regular keys can be used as shortcuts and all keys are interpreted in lower case.
 
+@param String keyExecuteAction Excute the currently selected {@link MenuActionMode} (if possible).
+@param String keyNavigateUp Navigate one step up in the menu structure.
 @param {map<char, MenuActionAbstract | Map<...>>} actionMap The map containing the {@link MenuActionAbstract}s.
 */
-function KeyboardMenu(actionMap) {
+function KeyboardMenu(keyExecuteAction, keyNavigateUp, actionMap) {
+    this._keyExecuteAction = keyExecuteAction;
+    this._keyNavigateUp = keyNavigateUp;
     this._actionMap = actionMap;
+
+
     this._userFeedbackCallback = function() {};
     this._stack = [];
 }
@@ -39,11 +45,11 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     }
 
     //ENTER or ESC - leave current (sub)-menu
-    if (event.code == "Escape" || event.key == "Enter") {
+    if (event.key === this._keyNavigateUp || event.key === this._keyExecuteAction) {
         this._userFeedbackCallback(true);
 
         if (actionMapSubset instanceof MenuActionMode) {
-            if (event.code == "Enter") actionMapSubset.stop();
+            if (event.key === this._keyExecuteAction) actionMapSubset.stop();
             else actionMapSubset.abort();
         }
 
@@ -96,8 +102,15 @@ Returns the menu structure as string.
 Calls {@link MenuActionAbstract}.toString().
 */
 KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
-    if (actionMapSubset === undefined)
-        return "Keyboard-based menu:" + this.toString(this._actionMap, "  ");
+    if (actionMapSubset === undefined) {
+        let result = "Keyboard-based menu:"
+            + "\n  up: " + this._keyNavigateUp
+            + "\n  execute: "  + this._keyExecuteAction
+            + "\n---"
+            + this.toString(this._actionMap, "  ");
+
+        return result;
+    }
 
     if (actionMapSubset instanceof Map) {
         let returnValue = "";
