@@ -113,18 +113,16 @@ KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
     }
 
     if (actionMapSubset instanceof Map) {
-        let returnValue = "";
+        let result = "";
 
-        let keys = Array.from(actionMapSubset.keys()).sort();
-
-        for (let i = 0; i < keys.length; i++) {
-            let current = actionMapSubset.get(keys[i]);
-            if (current instanceof Map) {
-                returnValue += "\n" + prefix + keys[i] + ": " + this.toString(current, prefix + "  ");
-            } else if (current !== null && current !== undefined) {
-                returnValue += "\n" + prefix + keys[i] + ": " + current.toString();
+        for (let [key, value] of actionMapSubset) {
+            if (value instanceof Map) {
+                result += "\n" + prefix + key + ": " + this.toString(value, prefix + "  ");
+            } else if (value !== null && value !== undefined) {
+                result += "\n" + prefix + key + ": " + value.toString();
             }
         }
-        return returnValue;
+
+        return result;
     }
 };
