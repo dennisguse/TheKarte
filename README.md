@@ -10,33 +10,46 @@ It was designed with two design criteria in mind:
 TheKarte uses a VI-inspired menu for interacting with the map.
 Therefore, the application does not _contain_ any buttons or other UI components beside the map.
 
-_NOTE:_ Please keep in mind that this is only a proof-of-concept.
-
-##How to use
+## Getting started
 TheKarte presents a UI consisting of a map, which is presented in full screen.
 As expected, a user can interact with the map using his mouse or touchscreen for panning and zooming.
 
+Geodata and image can be loaded via drag and drop while geodata can be exported (downloaded) to the local device.
+
 To access more advanced functionality the _keyboard-based menu_ is available.
-This menu is navigated by pressing the adequate key to navigate lower and __ESC__ to navigate upwards.
+This menu is navigated by pressing the adequate key to navigate lower and __v__ to navigate upwards.
 
 The menu is shown by pressing __'h'__ (top of the menu only) in an extra window.
 
+## Functionality
 Functionality for data handling:
 * draw features (circles, points and polygons),
 * delete features,
 * load features from files (via drag and drop),
 * add and delete layers, and
-* exporting data via local download
+* exporting data via local download.
 
 Functionality for styling:
-* (default) every layer is assigned a distinctive color, and
-* use image (one per layer) to represent points (via drag and drop)
+* (default) every layer is assigned a distinctive color,
+* use image (one per layer) to represent points (via drag and drop), and
+* clip lower layers.
 
 Functionality to change the view:
 * change background tile,
 * zoom to the extend of the current layer, and
 * change rendering method if performance is not sufficient.
 
-##Technical details
+## Configuration
+TheKarte can be easily configured.
+This mainly considers modifying the settings to your needs or adjusting the keyboard-based menu.
+All relevant code for this resides in `TheKarte.html`.
+To create a new configuration, just copy `TheKarte.html`, modify this copy, and open in your web browser.
+
+## Technical details
 TheKarte is implemented using [OpenLayers](https://openlayers.org/) and pure (aka vanilla JavaScript).
 All map-related and geodata-related features are provided by OpenLayers.
+
+## Privacy
+Please note that all geodata only resides in your web browser (while TheKarte is executed) and _nothing_ is send to any servers.
+The only exception is that, depending on your configuration, the tiles (the actual map) are downloaded from third-party servers.
+In this case, the area you are working on is disclosed to the operator of these servers.
