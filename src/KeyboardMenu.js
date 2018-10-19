@@ -44,14 +44,23 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         actionMapSubset = actionMapSubset.get(this._stack[i]);
     }
 
-    //ENTER or ESC - leave current (sub)-menu
-    if (event.key === this._keyNavigateUp || event.key === this._keyExecuteAction) {
+    //Navigate up in menu
+    if (event.key === this._keyNavigateUp) {
         this._userFeedbackCallback(true);
 
         if (actionMapSubset instanceof MenuActionMode) {
-            if (event.key === this._keyExecuteAction) actionMapSubset.stop();
-            else actionMapSubset.abort();
+            actionMapSubset.abort();
         }
+
+        this._stack.pop();
+        event.stopPropagation();
+        return;
+    }
+    //Execute action
+    if (event.key === this._keyExecuteAction && actionMapSubset instanceof MenuActionMode) {
+        this._userFeedbackCallback(true);
+
+        actionMapSubset.stop();
 
         this._stack.pop();
         event.stopPropagation();
