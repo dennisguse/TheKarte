@@ -103,19 +103,23 @@ MenuActionViewClippingLayer.prototype.start = function() {
     var layer = this._theKarte.getLayerActive();
 
     let layerNew = new ol.layer.Vector({
-          source: layer.getSource(),
-          style: layer.get('theKarte_styleContainer').getStyleFunction(),
-          renderMode: this._shouldbeClipping ? "image" : "vector" //TODO should use ol.source.VectorRenderType.VECTOR
+        source: layer.getSource(),
+        style: layer.get('theKarte_styleContainer').getStyleFunction(),
+        renderMode: this._shouldbeClipping ? "image" : "vector" //TODO should use ol.source.VectorRenderType.VECTOR
     });
 
     if (this._shouldbeClipping) {
         layerNew.on('precompose', function(e) {
-          e.context.globalCompositeOperation = 'destination-in';
+            e.context.globalCompositeOperation = 'destination-in';
         });
         layerNew.on('postcompose', function(e) {
-          e.context.globalCompositeOperation = 'source-over';
+            e.context.globalCompositeOperation = 'source-over';
         });
-        layerNew.setStyle(new ol.style.Style({fill: new ol.style.Fill({color: 'black'})}));
+        layerNew.setStyle(new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'black'
+            })
+        }));
     }
     this._theKarte.layerReplace(layerNew);
 };

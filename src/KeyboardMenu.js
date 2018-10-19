@@ -112,11 +112,11 @@ Calls {@link MenuActionAbstract}.toString().
 */
 KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
     if (actionMapSubset === undefined) {
-        let result = "Keyboard-based menu:"
-            + "\n  up: " + this._keyNavigateUp
-            + "\n  execute: "  + this._keyExecuteAction
-            + "\n---"
-            + this.toString(this._actionMap, "  ");
+        let result = "Keyboard-based menu:" +
+            "\n  up: " + this._keyNavigateUp +
+            "\n  execute: " + this._keyExecuteAction +
+            "\n---" +
+            this.toString(this._actionMap, "  ");
 
         return result;
     }
