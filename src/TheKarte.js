@@ -99,15 +99,9 @@ TheKarte.prototype.exportFeatures = function(features) {
         }
     );
 
-    var textFileAsBlob = new Blob([exportString], {
-        type: 'text/plain'
-    });
     var fileNameToSaveAs = "TheKarte-" + new Date().toJSON() + ".kml";
-    var downloadLink = document.createElement("a");
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.innerHTML = "Download File";
-    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-    downloadLink.click();
+
+    TheKarteHelperDownload(fileNameToSaveAs, exportString);
 };
 
 /**
