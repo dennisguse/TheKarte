@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--
+Converts CSV files to KML.
+Interaction is done via drag and drop while data is exported via local download.
+
+The output file name is the original name concatenated with ".kml".
+-->
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>TheKarte-csv2kml</title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.0/papaparse.js"></script>
+        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.2.0/build/ol.js"></script>
+    </head>
+
+    <style>
+    .dropArea {
+        height: 30em;
+        width: 30em;
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: dotted;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    </style>
+
+    <script src="src/HelperDownload.js"></script>
+
+    <script>
+    /**
+        Allow drop events.
+        */
+    function loadAllowDrop(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }
+
+    /**
+    Handles drop events.
+    */
+    function loadDrop(event) {
+        loadAllowDrop(event);
+
+        var columnLatitude = document.getElementById('choice-latitude').value;
+        var columnLongitude = document.getElementById('choice-longitude').value;
+
+        if (!columnLatitude || columnLatitude.length == 0 || !columnLatitude || columnLatitude.length == 0) {
+            console.error("TheKarte-csv2kml: no columns defined for coordinates.");
+            return;
+        }
+
+        if (event.dataTransfer.types.indexOf("Files") >= 0) {
+            var files = event.dataTransfer.files;
+
+            for (var i = 0; i < files.length; i++) {
+                console.log("TheKarte-csv2kml: got file (" + files[i].name + ").");
+
+                let fileSuffix = files[i].name.split('.').pop();
+
+                var format = null;
+                var filenameFormat = null;
+
+                switch (fileSuffix.toLowerCase()) {
+                    case "csv":
+                        format = convertCSV2KML;
+                        filenameFormat = function(filename) {
+                            return filename + ".kml"
+                        };
+                        break;
+                    default:
+                        console.error("TheKarte-csv2kml: don't know how to read file with suffix: " + fileSuffix);
+                        break
+                }
+
+                var reader = new FileReader();
+                reader.onload = function() {
+                    var contentFormatted = format(reader.result, columnLatitude, columnLongitude);
+                    if (contentFormatted === undefined) {
+                        console.error("TheKarte-csv2kml: could not convert data.");
+                        return;
+                    }
+                    TheKarteHelperDownload(filenameFormat(reader.filename), contentFormatted);
+                };
+                reader.onerror = function() {
+                    console.log("TheKarte-csv2kml: error during reading: " + reader.error);
+                };
+
+                reader.filename = files[i].name;
+                reader.readAsText(files[i]);
+            }
+        }
+    }
+
+    /**
+    Converts loaded CSV data into KML string.
+    Uses PapaParse to parse CSV.
+
+    @param {string} csvString CSV data as string.
+    @param {string} columnLatitude The CSV column containing the latitude.
+    @param {string} columnLongitude The CSV column containing the longitude.
+    @return {string} The KML data OR undefined.
+    */
+    function convertCSV2KML(csvString, columnLatitude, columnLongitude) {
+        var csvPapa = Papa.parse(csvString, {
+            header: true,
+            trimHeader: true,
+            dynamicTyping: true,
+            skipEmptyLines: 'greedy'
+        });
+        var csvData = csvPapa.data;
+
+        console.log("TheKarte-csv2kml: column latitude: " + columnLatitude + " and column longitude: " + columnLongitude);
+        console.log("TheKarte-csv2kml: got " + csvData.length + " rows to convert.");
+
+        //Converting to Openlayers features.
+        var features = new Array();
+        for (var i = 0; i < csvData.length; i++) {
+            if (csvData[i][columnLatitude] && csvData[i][columnLongitude]) {
+                let latitude = string2number(csvData[i][columnLatitude]);
+                let longitude = string2number(csvData[i][columnLongitude]);
+
+                console.info("csv2kml: got (" + latitude + ", " + longitude + ")");
+                let point = new ol.geom.Point([latitude, longitude]);
+                let feature = new ol.Feature(point);
+                feature.setProperties(csvData[i]);
+                features.push(feature);
+            }
+        }
+
+        //Write KML.
+        var exportString = new ol.format.KML().writeFeatures(features);
+
+        console.info("TheKarte-csv2kml: to be exported KML");
+        console.info(exportString);
+
+        return exportString;
+    }
+
+    /**
+    Localization: parses stringified number.
+    Accounts for european decimal separator before parsing.
+
+    @param {string} str One stringified number.
+    */
+    function string2number(str) {
+        if (typeof str === 'string' && str.includes(',')) {
+            return str.replace(',', '.');
+        }
+        return str;
+    }
+
+    </script>
+
+    <body style="height:100%; margin: 0;">
+        <div style="position: fixed; height: 100%; width: 100%; text-align: center; vertical-align: center">
+
+            <h1>TheKarte: CSV2KML</h1>
+
+            <p>
+                How to use:
+                <ol>
+                    <li>Set the columns for longitude and latitude</li>
+                    <li>Drag and drop the CSV files to be converted onto the drop area.</li>
+                    <li>KML data is automatically downloaded to your download-folder.</li>
+                </ol>
+
+                <b>NOTE:</b> If something went wrong, no file is downloaded.
+            </p>
+
+            <table style="margin-left: auto; margin-right:auto;">
+                <tr>
+                    <td align="right"><label for="choice-latitude">Latitude column:</label></td>
+                    <td align="left">
+                        <input list="latitude-flavors" id="choice-latitude" />
+
+                        <datalist id="latitude-flavors">
+                        <option value="x">
+                        <option value="Latitude">
+                        <option value="lat">
+                    </datalist> </td>
+                </tr>
+                <tr>
+                    <td align="right"><label for="choice-longitude">Longitude column:</label></td>
+                    <td align="left">
+                        <input list="longitude-flavors" id="choice-longitude" />
+                        <datalist id="longitude-flavors">
+                            <option value="y">
+                            <option value="longitude">
+                            <option value="lon">
+                        </datalist>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="dropArea" ondragover="loadAllowDrop(event)" ondrop="loadDrop(event)">
+                <div>DROP AREA</div>
+            </div>
+        </div>
+    </body>
+
+</html>
