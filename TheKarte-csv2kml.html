@@ -34,8 +34,8 @@ The output file name is the original name concatenated with ".kml".
 
     <script>
     /**
-        Allow drop events.
-        */
+    Allow drop events.
+    */
     function loadAllowDrop(event) {
         event.stopPropagation();
         event.preventDefault();
@@ -55,6 +55,7 @@ The output file name is the original name concatenated with ".kml".
             console.error("TheKarte-csv2kml: no columns defined for coordinates.");
             return;
         }
+        console.log("TheKarte-csv2kml: column latitude: " + columnLatitude + " and column longitude: " + columnLongitude);
 
         if (event.dataTransfer.types.indexOf("Files") >= 0) {
             var files = event.dataTransfer.files;
@@ -74,6 +75,13 @@ The output file name is the original name concatenated with ".kml".
                             return filename + ".kml"
                         };
                         break;
+                    case "kml":
+                        format = convertKML2CSV;
+                        filenameFormat = function(filename) {
+                            return filename + ".csv"
+                        };
+                        break;
+
                     default:
                         console.error("TheKarte-csv2kml: don't know how to read file with suffix: " + fileSuffix);
                         break
@@ -86,6 +94,10 @@ The output file name is the original name concatenated with ".kml".
                         console.error("TheKarte-csv2kml: could not convert data.");
                         return;
                     }
+
+                    console.log("TheKarte-csv2kml: content of " + reader.filename);
+                    console.log(contentFormatted);
+
                     TheKarteHelperDownload(filenameFormat(reader.filename), contentFormatted);
                 };
                 reader.onerror = function() {
@@ -116,8 +128,7 @@ The output file name is the original name concatenated with ".kml".
         });
         var csvData = csvPapa.data;
 
-        console.log("TheKarte-csv2kml: column latitude: " + columnLatitude + " and column longitude: " + columnLongitude);
-        console.log("TheKarte-csv2kml: got " + csvData.length + " rows to convert.");
+        console.log("TheKarte-csv2kml: got " + csvData.length + " rows to convert into KML.");
 
         //Converting to Openlayers features.
         var features = new Array();
@@ -129,16 +140,60 @@ The output file name is the original name concatenated with ".kml".
                 console.info("csv2kml: got (" + latitude + ", " + longitude + ")");
                 let point = new ol.geom.Point([latitude, longitude]);
                 let feature = new ol.Feature(point);
+
+                delete csvData[i][columnLatitude];
+                delete csvData[i][columnLongitude];
                 feature.setProperties(csvData[i]);
+
                 features.push(feature);
             }
         }
 
-        //Write KML.
-        var exportString = new ol.format.KML().writeFeatures(features);
+        return new ol.format.KML().writeFeatures(features);
+    }
 
-        console.info("TheKarte-csv2kml: to be exported KML");
-        console.info(exportString);
+    /**
+    Converts loaded KML data into CSV string.
+    Uses PapaParse to unparse CSV.
+
+    @param {string} kmlString KML data as string.
+    @param {string} columnLatitude The CSV column containing the latitude.
+    @param {string} columnLongitude The CSV column containing the longitude.
+    @return {string} The CSV data OR undefined.
+    */
+    function convertKML2CSV(kmlString, columnLatitude, columnLongitude) {
+        var features = new ol.format.KML().readFeatures(kmlString);
+
+        console.log("TheKarte-csv2kml: got " + features.length + " features to convert into CSV.");
+
+        //Converting to Openlayers features.
+        var featuresCSV = new Array();
+        for (var i = 0; i < features.length; i++) {
+            let coordinates = features[i].getGeometry().getCoordinates();
+
+            //Get coordinates
+            let featureData = {};
+            featureData[columnLatitude] = coordinates[0];
+            featureData[columnLongitude] = coordinates[1];
+
+            //Get data
+            featureProperties = features[i].getProperties();
+            for (var key in featureProperties) {
+                if (key != features[i].getGeometryName())
+                    featureData[key] = featureProperties[key];
+            }
+
+            featuresCSV.push(featureData);
+        }
+
+        var exportString = Papa.unparse(featuresCSV, {
+            quotes: false,
+            quoteChar: '"',
+            escapeChar: '"',
+            delimiter: ",",
+            header: true,
+            newline: "\r\n"
+        });
 
         return exportString;
     }
@@ -167,8 +222,8 @@ The output file name is the original name concatenated with ".kml".
                 How to use:
                 <ol>
                     <li>Set the columns for longitude and latitude</li>
-                    <li>Drag and drop the CSV files to be converted onto the drop area.</li>
-                    <li>KML data is automatically downloaded to your download-folder.</li>
+                    <li>Drag and drop the <i>CSV files</i> or <i>KML files</i> to be converted onto the drop area.</li>
+                    <li>Each file is processed individually and automatically downloaded to your download-folder.</li>
                 </ol>
 
                 <b>NOTE:</b> If something went wrong, no file is downloaded.
