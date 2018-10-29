@@ -110,7 +110,7 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
 
         let features = wkt.readFeatures(content, {
             dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:4326'
+            featureProjection: 'EPSG:3857'
         });
         this._theKarte.getLayerActive().getSource().addFeatures(features);
     }
