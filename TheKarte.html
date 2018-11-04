@@ -194,7 +194,7 @@
             theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
         }.bind(this);
 
-        theKarte.setup(keyboardMenu, dropHandler, userFeedbackCallback, theKarte_MapElement, window);
+        theKarte.setup(keyboardMenu, dropHandler, userFeedbackCallback, theKarte_MapElement, window, document.body);
 
         theKarte.setTileSource(defaultTileSource);
 

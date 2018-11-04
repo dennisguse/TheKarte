@@ -51,15 +51,16 @@ Adds event listeners for keyboard and drag and drop.
 @param {Function} userFeedbackCallback Callback to give provide user feedback.
 @param {Element} parentElement The HTML element in which the map should be shown.
 @param {Element} keyEventEmitter The HTML element that gets the key events.
+@param {Element} pasteEventEmitter The HTML element that gets the paste events.
 */
-TheKarte.prototype.setup = function(keyboardMenu, dropHandler, userFeedbackCallback, parentElement, keyEventEmitter) {
+TheKarte.prototype.setup = function(keyboardMenu, dropHandler, userFeedbackCallback, parentElement, keyEventEmitter, pasteEventEmitter) {
     this._openlayersMap.setTarget(parentElement);
 
     this._keyboardMenu = keyboardMenu;
     this._keyboardMenu.setUserFeedbackCallback(this.sendUserFeedback.bind(this));
     keyEventEmitter.onkeyup = this._keyboardMenu.handleKeypress.bind(this._keyboardMenu);
 
-    dropHandler.setup(parentElement);
+    dropHandler.setup(parentElement, pasteEventEmitter);
 
     this._userFeedbackCallback = userFeedbackCallback;
 

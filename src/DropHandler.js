@@ -1,5 +1,5 @@
 /**
-Handles drop-events of plain text and files.
+For plain text handles drop- and paste-events and for files drop-events.
 @class DropHandler
 @constructor
 */
@@ -12,10 +12,13 @@ DropHandler.prototype.constructor = DropHandler;
 
 /**
 @param {Element} parentElement The HTML element in which triggers dropEvents.
+@param {Element} pasteEventEmitter The HTML element that gets the paste events.
 */
-DropHandler.prototype.setup = function(parentElement) {
+DropHandler.prototype.setup = function(parentElement, pasteEventEmitter) {
     parentElement.addEventListener('dragover', this.dropAllow.bind(this));
     parentElement.addEventListener('drop', this.dropHandle.bind(this));
+
+    pasteEventEmitter.addEventListener('paste', this.dropHandle.bind(this));
 };
 
 /**
@@ -24,7 +27,8 @@ Handles to start of a drop event.
 DropHandler.prototype.dropAllow = function(event) {
     event.stopPropagation();
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    if (event.dataTransfer !== undefined)
+      event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 };
 
 /**
@@ -93,30 +97,34 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
 };
 
 /**
-Handles dragAndDrop-events for loading geo data.
+Handles dragAndDrop-events and paste-events for loading geo data.
 Adds the loaded features to the currently active layer.
 
 This functions supports as text WKT and as file GPX, GeoJSON, KML, and WKT.
 File content is determined by suffix.
 */
 DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
-    //Handle text/plain as WKT
-    if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
-        console.log("DropHandler: got text. Trying to interpret as WKT.");
-        let wkt = new ol.format.WKT();
+    //Handle text/plain as WKT: DragAndDrop and CopyPaste
+    {
+        let eventData = event.clipboardData !== undefined ? event.clipboardData : event.dataTransfer;
+        if (eventData.types.indexOf("text/plain") >= 0) {
+            console.log("DropHandler: got text. Trying to interpret as WKT.");
+            let wkt = new ol.format.WKT();
 
-        let content = event.dataTransfer.getData("text/plain");
-        console.log(content);
+            //let content = event.dataTransfer.getData("text/plain");
+            let content = eventData.getData("text/plain");
+            console.log(content);
 
-        let features = wkt.readFeatures(content, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
-        });
-        this._theKarte.getLayerActive().getSource().addFeatures(features);
+            let features = wkt.readFeatures(content, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            });
+            this._theKarte.getLayerActive().getSource().addFeatures(features);
+        }
     }
 
     //Handle files by extension
-    if (event.dataTransfer.types.indexOf("Files") >= 0) {
+    if (event.dataTransfer !== undefined && event.dataTransfer.types.indexOf("Files") >= 0) {
         var files = event.dataTransfer.files;
 
         //Check how multiple files are handled.
