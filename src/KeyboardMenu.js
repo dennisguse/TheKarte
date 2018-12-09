@@ -113,8 +113,8 @@ Calls {@link MenuActionAbstract}.toString().
 KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
     if (actionMapSubset === undefined) {
         let result = "Keyboard-based menu:" +
-            "\n  up: " + this._keyNavigateUp +
-            "\n  execute: " + this._keyExecuteAction +
+            "\n  up: (" + this._keyNavigateUp + ")" +
+            "\n  execute: (" + this._keyExecuteAction + ")" +
             "\n---" +
             this.toString(this._actionMap, "  ");
 
@@ -126,9 +126,9 @@ KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
 
         for (let [key, value] of actionMapSubset) {
             if (value instanceof Map) {
-                result += "\n" + prefix + key + ": " + this.toString(value, prefix + "  ");
+                result += "\n" + prefix + "(" + key + ") " + this.toString(value, prefix + "  ");
             } else if (value !== null && value !== undefined) {
-                result += "\n" + prefix + key + ": " + value.toString();
+                result += "\n" + prefix + "(" + key + ") " + value.toString();
             }
         }
 
