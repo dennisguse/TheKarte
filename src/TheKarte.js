@@ -160,7 +160,7 @@ TheKarte.prototype.getLayerActiveIndex = function() {
 */
 TheKarte.prototype.getLayerByIndex = function(idx) {
     var layer = this.getMap().getLayers().item(idx);
-    return layer instanceof ol.layer.Layer ? layer : null;
+    return layer instanceof ol.layer.Vector ? layer : null;
 };
 
 /**
