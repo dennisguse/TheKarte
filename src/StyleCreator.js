@@ -62,7 +62,7 @@ StyleCreator.prototype._createStyleRender = function(colorRGB, feature, clusterS
                 fill: new ol.style.Fill({
                     color: colorFill
                 })
-            })
+            });
     }
 
     if (clusterSize > 1) {

@@ -22,7 +22,7 @@ MenuActionAbstract.prototype.getMap = function() {
 */
 MenuActionAbstract.prototype.toString = function() {
     return this.constructor.name;
-}
+};
 
 /**
 An abstract menu item that finishes immmediately.

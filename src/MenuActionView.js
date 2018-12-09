@@ -36,7 +36,7 @@ MenuActionViewTile.prototype.start = function() {
 };
 MenuActionViewTile.prototype.toString = function() {
     return this.constructor.name + "(urls: " + this._olSourceTile.getUrls() + ")";
-}
+};
 
 /**
 A menu item that changes the render mode of all VectorLayer.
@@ -147,9 +147,9 @@ MenuActionViewClusterToggle.prototype.constructor = MenuActionViewClusterToggle;
 MenuActionViewClusterToggle.prototype.start = function() {
     var currentSource = this._theKarte.getLayerActive().getSource();
     if (currentSource instanceof ol.source.Vector && !(currentSource instanceof ol.source.Cluster)) {
-        if (currentSource.getFeatures().filter(feature => {
+        if (currentSource.getFeatures().filter(feature =>
                 !(feature instanceof ol.geom.Point)
-            }).length === 0) {
+            ).length === 0) {
             console.warn(this.constructor.name, ": view can only be clustered if _only_ points are on the layer");
             this._theKarte.sendUserFeedback(false);
             return;

@@ -95,7 +95,7 @@ MenuActionFeatureDelete.prototype.stop = function() {
     this.getMap().removeInteraction(this._interactionHighlight);
 };
 MenuActionFeatureDelete.prototype._featureDelete = function(selectEvent) {
-    this._theKarte.getLayerActive().getSource().removeFeature(selectEvent.element)
+    this._theKarte.getLayerActive().getSource().removeFeature(selectEvent.element);
     this._interaction.getFeatures().clear();
 };
 

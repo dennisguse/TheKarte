@@ -32,7 +32,7 @@ KeyboardMenu.prototype.setUserFeedbackCallback = function(userFeedbackCallback) 
         return;
     }
     this._userFeedbackCallback = userFeedbackCallback;
-}
+};
 /**
 Handles the keypress and triggers actions if selected.
 */

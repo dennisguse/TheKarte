@@ -7,7 +7,7 @@ function DropHandler(theKarte) {
     this._theKarte = theKarte;
 
     this._mode = 'geo'; // or 'style'
-};
+}
 DropHandler.prototype.constructor = DropHandler;
 
 /**
@@ -125,13 +125,13 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
 
     //Handle files by extension
     if (event.dataTransfer !== undefined && event.dataTransfer.types.indexOf("Files") >= 0) {
-        var files = event.dataTransfer.files;
+        let files = event.dataTransfer.files;
 
         //Check how multiple files are handled.
         for (let i = 0; i < files.length; i++) {
             let suffix = files[i].name.split('.').pop();
 
-            var format = null;
+            let format = null;
             console.log("DropHandler: got file (" + files[i].name + ").");
 
             switch (suffix.toLowerCase()) {
@@ -157,7 +157,6 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
 
                 default:
                     console.error("DropHandler: don't know how to read file with suffix: " + suffix);
-                    continue;
                     break;
             }
             if (format === null) {
