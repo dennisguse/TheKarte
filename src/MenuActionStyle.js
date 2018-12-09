@@ -24,3 +24,6 @@ MenuActionViewStyleImageScale.prototype.start = function() {
 MenuActionViewStyleImageScale.prototype.toString = function() {
     return this.constructor.name + "(scaleDiff: " + this._scaleDiff + ")";
 };
+MenuActionViewStyleImageScale.prototype.getDescription = function() {
+    return "Change the size of the images representing features (if loaded).";
+};

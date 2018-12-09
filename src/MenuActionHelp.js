@@ -24,3 +24,9 @@ MenuActionHelp.prototype.start = function() {
         }.bind(this);
     }
 };
+MenuActionHelp.prototype.toString = function() {
+    return this.constructor.name;
+};
+MenuActionHelp.prototype.getDescription = function() {
+    return "Show the keyboard-based menu.";
+};

@@ -14,6 +14,9 @@ MenuActionLayerAdd.prototype.constructor = MenuActionLayerAdd;
 MenuActionLayerAdd.prototype.start = function() {
     this._theKarte.layerAdd();
 };
+MenuActionLayerAdd.prototype.getDescription = function() {
+    return "Add a new (empty) layer and select it.";
+};
 
 /**
 A menu item that allows to select the active layer (by index).
@@ -45,6 +48,9 @@ MenuActionLayerSelect.prototype.stop = function() {
 MenuActionLayerSelect.prototype.abort = function() {
     this._input = 0;
 };
+MenuActionLayerSelect.prototype.getDescription = function() {
+    return "Select the active layer by index. Enter the index number (starting by 1) and press the execute key.";
+};
 
 /**
 A menu item to delete the active VectorLayer.
@@ -61,4 +67,7 @@ MenuActionLayerDelete.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionLayerDelete.prototype.constructor = MenuActionLayerDelete;
 MenuActionLayerDelete.prototype.start = function() {
     this._theKarte.layerDelete();
+};
+MenuActionLayerDelete.prototype.getDescription = function() {
+    return "Delete the active layer.";
 };

@@ -21,3 +21,6 @@ MenuActionExportKML.prototype.start = function() {
 MenuActionExportKML.prototype.toString = function() {
     return this.constructor.name + "(all features: " + this._all + ")";
 };
+MenuActionExportKML.prototype.getDescription = function() {
+    return "Export the geographical data as KML to your local device.";
+};

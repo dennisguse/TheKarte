@@ -14,7 +14,9 @@ MenuActionViewExtent.prototype.constructor = MenuActionViewExtent;
 MenuActionViewExtent.prototype.start = function() {
     this.getMap().getView().fit(this._theKarte.getLayerActive().getSource().getExtent());
 };
-
+MenuActionViewExtent.prototype.getDescription = function() {
+    return "Zoom to show all features of the active layer.";
+};
 /**
 A menu item that changes the background tile.
 
@@ -36,6 +38,9 @@ MenuActionViewTile.prototype.start = function() {
 };
 MenuActionViewTile.prototype.toString = function() {
     return this.constructor.name + "(urls: " + this._olSourceTile.getUrls() + ")";
+};
+MenuActionViewTile.prototype.getDescription = function() {
+    return "";
 };
 
 /**
@@ -77,6 +82,9 @@ MenuActionViewPerformance.prototype.start = function() {
 };
 MenuActionViewPerformance.prototype.toString = function() {
     return this.constructor.name + "(shouldBeFast: " + this._shouldBeFast + ")";
+};
+MenuActionViewPerformance.prototype.getDescription = function() {
+    return "Switch the renderMode between immediately (slow but accurate) and delayed (fast but inaccurate).";
 };
 
 /**
@@ -126,6 +134,9 @@ MenuActionViewClippingLayer.prototype.start = function() {
 MenuActionViewClippingLayer.prototype.toString = function() {
     return this.constructor.name + "(shouldbeClipping: " + this._shouldbeClipping + ")";
 };
+MenuActionViewClippingLayer.prototype.getDescription = function() {
+    return "Use the active layer as a clipping for the base map (i.e., background tiles).";
+};
 
 /**
 A menu item that toggles the clustering of points.
@@ -166,4 +177,7 @@ MenuActionViewClusterToggle.prototype.start = function() {
     if (currentSource instanceof ol.source.Cluster) {
         this._theKarte.getLayerActive().setSource(currentSource.getSource());
     }
+};
+MenuActionViewClusterToggle.prototype.getDescription = function() {
+    return "Toggle the point clustering of the active layer.";
 };

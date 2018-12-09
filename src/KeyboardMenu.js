@@ -95,6 +95,10 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         if (actionMapNext instanceof MenuActionAbstract) {
             console.log(this.constructor.name + ": executing " + actionMapNext.toString());
             actionMapNext.start();
+        } else if (actionMapNext instanceof MenuActionMode) {
+            console.log(this.constructor.name + ": executing " + actionMapNext.toString() + " " + actionMapNext.getDescription());
+        } else {
+            console.log(this.constructor.name + ": entering submenu (" + currentKey + ").");
         }
 
         if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionMode) {
@@ -116,7 +120,7 @@ KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
             "\n  up: (" + this._keyNavigateUp + ")" +
             "\n  execute: (" + this._keyExecuteAction + ")" +
             "\n---" +
-            this.toString(this._actionMap, "  ");
+            this.toString(this._actionMap, " ");
 
         return result;
     }
@@ -128,7 +132,10 @@ KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
             if (value instanceof Map) {
                 result += "\n" + prefix + "(" + key + ") " + this.toString(value, prefix + "  ");
             } else if (value !== null && value !== undefined) {
-                result += "\n" + prefix + "(" + key + ") " + value.toString();
+                let current = prefix + "(" + key + ") ";
+                result += "\n" + current + value.toString();
+
+                if (value.getDescription() != "") result += "\n" + " ".repeat(current.length) + value.getDescription();
             }
         }
 

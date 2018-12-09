@@ -23,3 +23,6 @@ MenuActionDrop.prototype.start = function() {
 MenuActionDrop.prototype.toString = function() {
     return this.constructor.name + "(mode: " + this._mode + ")";
 };
+MenuActionDrop.prototype.getDescription = function() {
+    return "Changes the mode on to process drag and dropped files.";
+};

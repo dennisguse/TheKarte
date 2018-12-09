@@ -33,6 +33,9 @@ MenuActionFeatureAdd.prototype.stop = function() {
 MenuActionFeatureAdd.prototype.toString = function() {
     return this.constructor.name + "(" + this._featureType + ")";
 };
+MenuActionFeatureAdd.prototype.getDescription = function() {
+    return "Add new features to current active layer.";
+};
 
 /**
 A menu item to modify existing features in the active VectorLayer.
@@ -59,6 +62,9 @@ MenuActionFeatureModify.prototype.start = function() {
 MenuActionFeatureModify.prototype.stop = function() {
     this.getMap().removeInteraction(this._interaction);
     this._interaction = null;
+};
+MenuActionFeatureModify.prototype.getDescription = function() {
+    return "Modify existing features (e.g., move).";
 };
 
 /**
@@ -98,6 +104,10 @@ MenuActionFeatureDelete.prototype._featureDelete = function(selectEvent) {
     this._theKarte.getLayerActive().getSource().removeFeature(selectEvent.element);
     this._interaction.getFeatures().clear();
 };
+MenuActionFeatureDelete.prototype.getDescription = function() {
+    return "Delete existing features.";
+};
+
 
 /**
 A menu item to select and export features of the current layer using another layer.
@@ -135,4 +145,8 @@ MenuActionFeatureFilter.prototype.abort = function() {
 };
 MenuActionFeatureFilter.prototype.toString = function() {
     return this.constructor.name + "(inside: " + this._isInside + ")";
+};
+MenuActionFeatureFilter.prototype.getDescription = function() {
+    return "Export all features of the active layer that are inside/outside the features (e.g., polygons) of another layer." +
+           "Enter its the index number (starting by 1) and press the execute key.";
 };
