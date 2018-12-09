@@ -148,5 +148,5 @@ MenuActionFeatureFilter.prototype.toString = function() {
 };
 MenuActionFeatureFilter.prototype.getDescription = function() {
     return "Export all features of the active layer that are inside/outside the features (e.g., polygons) of another layer." +
-           "Enter its the index number (starting by 1) and press the execute key.";
+        "Enter its the index number (starting by 1) and press the execute key.";
 };

@@ -23,10 +23,10 @@ Coordinates are exported in WGS84.
         flex-direction: column;
         justify-content: center;
     }
+
     </style>
 
     <script>
-
     /**
 
     @param {element} inputArea An input area containing one address per line.
@@ -41,7 +41,7 @@ Coordinates are exported in WGS84.
         coordinateList = new Array();
 
         //Requests address synchronuous.
-        for(let i = 0; i < addressListTrimmed.length; i++) {
+        for (let i = 0; i < addressListTrimmed.length; i++) {
             if (addressList[i].length == 0) {
                 console.warn('Line ' + i + ' is empty or contains whitespaces only.');
                 coordinateList.push([addressList[i]]);
@@ -67,7 +67,6 @@ Coordinates are exported in WGS84.
                 }
             }
         }
-
 
         inputArea.value = coordinateList.map(a => a.join(';')).join('\n');
     }

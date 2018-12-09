@@ -27,8 +27,7 @@ MenuActionAbstract.prototype.toString = function() {
 @abstract
 @returns {string} Returns the description of the functionality.
 */
-MenuActionAbstract.prototype.getDescription = function() {
-};
+MenuActionAbstract.prototype.getDescription = function() {};
 
 /**
 An abstract menu item that finishes immmediately.

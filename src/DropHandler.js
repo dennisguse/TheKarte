@@ -28,7 +28,7 @@ DropHandler.prototype.dropAllow = function(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer !== undefined)
-      event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 };
 
 /**
