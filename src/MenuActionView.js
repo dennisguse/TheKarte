@@ -64,7 +64,7 @@ function MenuActionViewPerformance(theKarte, shouldBeFast) {
 MenuActionViewPerformance.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewPerformance.prototype.constructor = MenuActionViewPerformance;
 MenuActionViewPerformance.prototype.start = function() {
-    var collectionLayers = this.getMap().getLayerGroup().getLayers();
+    const collectionLayers = this.getMap().getLayerGroup().getLayers();
 
     for (let i = 0; i < collectionLayers.getLength(); i++) {
         let layer = collectionLayers.item(i);
@@ -108,7 +108,7 @@ function MenuActionViewClippingLayer(theKarte, shouldbeClipping) {
 MenuActionViewClippingLayer.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewClippingLayer.prototype.constructor = MenuActionViewClippingLayer;
 MenuActionViewClippingLayer.prototype.start = function() {
-    var layer = this._theKarte.getLayerActive();
+    const layer = this._theKarte.getLayerActive();
 
     let layerNew = new ol.layer.Vector({
         source: layer.getSource(),
@@ -156,7 +156,7 @@ function MenuActionViewClusterToggle(theKarte, clusterDistance) {
 MenuActionViewClusterToggle.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewClusterToggle.prototype.constructor = MenuActionViewClusterToggle;
 MenuActionViewClusterToggle.prototype.start = function() {
-    var currentSource = this._theKarte.getLayerActive().getSource();
+    let currentSource = this._theKarte.getLayerActive().getSource();
     if (currentSource instanceof ol.source.Vector && !(currentSource instanceof ol.source.Cluster)) {
         if (currentSource.getFeatures().filter(feature =>
                 !(feature instanceof ol.geom.Point)

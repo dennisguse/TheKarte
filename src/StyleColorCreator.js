@@ -11,12 +11,12 @@ function StyleColorCreator(start) {
 }
 StyleColorCreator.prototype.constructor = StyleColorCreator;
 StyleColorCreator.prototype._HSVtoColorRGB = function(h, s, v, a) {
-    var i = Math.floor(h * 6);
-    var f = h * 6 - i;
-    var p = v * (1 - s);
-    var q = v * (1 - f * s);
-    var t = v * (1 - (1 - f) * s);
-    var r, g, b;
+    let i = Math.floor(h * 6);
+    let f = h * 6 - i;
+    let p = v * (1 - s);
+    let q = v * (1 - f * s);
+    let t = v * (1 - (1 - f) * s);
+    let r, g, b;
     switch (i % 6) {
         case 0:
             r = v;

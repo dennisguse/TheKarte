@@ -36,7 +36,7 @@ MenuActionLayerSelect.prototype.start = function() {
     this._input = 0;
 };
 MenuActionLayerSelect.prototype.handleKeyboardEvent = function(event) {
-    var digit = event.keyCode - 48;
+    let digit = event.keyCode - 48;
     if (0 <= digit && digit <= 9) {
         this._input = this._input * 10 + digit;
     }

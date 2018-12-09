@@ -32,16 +32,16 @@ Coordinates are exported in WGS84.
     @param {element} inputArea An input area containing one address per line.
     */
     function geocode(inputArea) {
-        var addresses = inputArea.value;
-        var addressList = addresses.split('\n');
-        var addressListTrimmed = addressList.map(a => a.trim());
+        const addresses = inputArea.value;
+        const addressList = addresses.split('\n');
+        const addressListTrimmed = addressList.map(a => a.trim());
 
         console.log(addressListTrimmed);
 
         coordinateList = new Array();
 
         //Requests address synchronuous.
-        for(var i = 0; i < addressListTrimmed.length; i++) {
+        for(let i = 0; i < addressListTrimmed.length; i++) {
             if (addressList[i].length == 0) {
                 console.warn('Line ' + i + ' is empty or contains whitespaces only.');
                 coordinateList.push([addressList[i]]);

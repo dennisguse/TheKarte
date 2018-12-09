@@ -88,11 +88,11 @@
         theKarte = new TheKarte(
             new StyleCreator(), new StyleColorCreator()
         );
-        var dropHandler = new DropHandler(theKarte);
+        const dropHandler = new DropHandler(theKarte);
 
-        var defaultTileSource = new ol.source.OSM();
+        const defaultTileSource = new ol.source.OSM();
 
-        var keyboardMenu = new KeyboardMenu(
+        const keyboardMenu = new KeyboardMenu(
             "g",
             "v",
 
@@ -179,15 +179,15 @@
             ])
         );
 
-        var theKarte_MapElement = document.createElement("div");
+        const theKarte_MapElement = document.createElement("div");
         theKarte_MapElement.id = "theKarteMap";
         document.body.append(theKarte_MapElement);
 
-        var theKarte_FeedbackElement = document.createElement("div");
+        const theKarte_FeedbackElement = document.createElement("div");
         theKarte_FeedbackElement.id = "theKarteFeedback";
         document.body.append(theKarte_FeedbackElement);
 
-        var userFeedbackCallback = function(isOk) {
+        const userFeedbackCallback = function(isOk) {
             theKarte_FeedbackElement.classList.remove("feedbackOk");
             theKarte_FeedbackElement.classList.remove("feedbackError");
             void theKarte_FeedbackElement.offsetWidth;
@@ -199,7 +199,7 @@
         theKarte.setTileSource(defaultTileSource);
 
         window.onbeforeunload = function(event) {
-            var text = "Do want to reload/close this application? All data will be lost.";
+            const text = "Do want to reload/close this application? All data will be lost.";
             event.returnValue = text;
             return text;
         };

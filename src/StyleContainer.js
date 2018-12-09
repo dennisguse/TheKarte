@@ -58,15 +58,15 @@ Returns the style for the feature to be rendered.
 @returns {ol.style.Style}
 */
 StyleContainer.prototype.getStyle = function(feature) {
-    var featureKey = feature.getGeometry().getType();
+    let featureKey = feature.getGeometry().getType();
 
-    var featureCount = 1;
+    let featureCount = 1;
     if (feature.get('features') !== undefined) {
         featureCount = feature.get('features').length;
         featureKey += "_" + featureCount;
     }
 
-    var style = this._cache.get(featureKey);
+    let style = this._cache.get(featureKey);
     if (style !== undefined) {
         return style;
     }

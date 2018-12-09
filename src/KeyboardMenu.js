@@ -38,7 +38,7 @@ Handles the keypress and triggers actions if selected.
 */
 KeyboardMenu.prototype.handleKeypress = function(event) {
     //Navigate in actionMap to current level: search for current position in menu.
-    var actionMapSubset = this._actionMap;
+    let actionMapSubset = this._actionMap;
 
     for (let i = 0; i < this._stack.length; i++) {
         actionMapSubset = actionMapSubset.get(this._stack[i]);
@@ -81,14 +81,14 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     }
 
     //Is it a regular key?
-    var currentKey = event.key.toLowerCase();
+    let currentKey = event.key.toLowerCase();
     if (currentKey === null) {
         this._userFeedbackCallback(false);
         console.warn(this.constructor.name + ": key " + currentKey + " not found in this (sub-)menu.");
         return;
     }
 
-    var actionMapNext = actionMapSubset.get(currentKey);
+    let actionMapNext = actionMapSubset.get(currentKey);
     if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionAbstract) {
         this._userFeedbackCallback(true);
 

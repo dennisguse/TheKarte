@@ -93,14 +93,14 @@ TheKarte.prototype.exportFeatures = function(features) {
         console.error(this.constructor.name + ".exportFeatures(): no features to export. Will do nothing.");
         return;
     }
-    var exportString = new ol.format.KML().writeFeatures(
+    const exportString = new ol.format.KML().writeFeatures(
         Array.from(features), {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
         }
     );
 
-    var fileNameToSaveAs = "TheKarte-" + new Date().toJSON() + ".kml";
+    const fileNameToSaveAs = "TheKarte-" + new Date().toJSON() + ".kml";
 
     TheKarteHelperDownload(fileNameToSaveAs, exportString);
 };
@@ -126,9 +126,9 @@ TheKarte.prototype.setTileSource = function(olSourceTile) {
 TheKarte.prototype.getFeatures = function(all) {
     if (!all) return this.getLayerActive().getSource().getFeatures();
 
-    var features = [];
+    let features = [];
 
-    var layerList = this.getMap().getLayers().getArray();
+    const layerList = this.getMap().getLayers().getArray();
     for (let i = 0; i < layerList.length; i++) {
         if (layerList[i] instanceof ol.layer.Vector) {
             features = features.concat(layerList[i].getSource().getFeatures());
@@ -159,7 +159,7 @@ TheKarte.prototype.getLayerActiveIndex = function() {
 @return {ol.layer.Vector} The current active VectorLayer (i.e., the one that would be edited).
 */
 TheKarte.prototype.getLayerByIndex = function(idx) {
-    var layer = this.getMap().getLayers().item(idx);
+    const layer = this.getMap().getLayers().item(idx);
     return layer instanceof ol.layer.Vector ? layer : null;
 };
 
@@ -167,7 +167,7 @@ TheKarte.prototype.getLayerByIndex = function(idx) {
 @return {ol.layer.Vector} The current active VectorLayer (i.e., the one that would be edited).
 */
 TheKarte.prototype.getLayerActive = function() {
-    var layer = this.getMap().getLayers().item(this._layerActiveIndex);
+    const layer = this.getMap().getLayers().item(this._layerActiveIndex);
     return layer instanceof ol.layer.Vector ? layer : null;
 };
 
@@ -175,7 +175,7 @@ TheKarte.prototype.getLayerActive = function() {
 @return {StyleContainer|null} The {@link StyleContainer} of current active VectorLayer (i.e., the one that would be edited).
 */
 TheKarte.prototype.getLayerActiveStyleContainer = function() {
-    var layer = this.getLayerActive();
+    const layer = this.getLayerActive();
     if (layer === null) {
         return null;
     }
@@ -187,9 +187,9 @@ Add a new VectorLayer and mark it as active.
 RenderMode is taken from the previous active layer.
 */
 TheKarte.prototype.layerAdd = function() {
-    var styleContainer = new StyleContainer(this._styleCreator, this._styleColorCreator.nextColor());
+    const styleContainer = new StyleContainer(this._styleCreator, this._styleColorCreator.nextColor());
 
-    var layer = new ol.layer.Vector({
+    const layer = new ol.layer.Vector({
         source: new ol.source.Vector(),
         renderMode: this.getLayerActive() !== null ? this.getLayerActive().getRenderMode() : undefined,
 
@@ -209,8 +209,8 @@ Transfers the styleContainer (by reference).
 @param {int} index The index of the layer to be replaced. 'undefined' to replace the active layer.
 */
 TheKarte.prototype.layerReplace = function(layerNew, index) {
-    var layerOld;
-    var indexInternal = index;
+    let layerOld;
+    let indexInternal = index;
 
     if (index !== undefined) {
         layerOld = this.getMap().getLayerGroup().getLayers().item(index);
@@ -267,8 +267,8 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
         return new Set();
     }
 
-    var layerFeatures = this.getLayerByIndex(layerFeatureIndex);
-    var layerFilter = this.getLayerByIndex(layerFilterIndex);
+    const layerFeatures = this.getLayerByIndex(layerFeatureIndex);
+    const layerFilter = this.getLayerByIndex(layerFilterIndex);
 
     if (layerFeatures === null) {
         console.error(this.constructor.name + ": layer with index " + layerFeatureIndex + " does not exist.");
@@ -280,9 +280,9 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
         return;
     }
 
-    var resultInside = new Set();
+    const resultInside = new Set();
 
-    var featuresFilter = layerFilter.getSource().getFeatures();
+    const featuresFilter = layerFilter.getSource().getFeatures();
     for (let i = 0; i < featuresFilter.length; i++) {
         let extend = featuresFilter[i].getGeometry().getExtent();
         let currentResult = layerFeatures.getSource().getFeaturesInExtent(extend);
@@ -290,7 +290,7 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
         currentResult.forEach(feature => resultInside.add(feature));
     }
 
-    var result = isInside ? resultInside : new Set(layerFeatures.getSource().getFeatures().filter(feature => !resultInside.has(feature)));
+    const result = isInside ? resultInside : new Set(layerFeatures.getSource().getFeatures().filter(feature => !resultInside.has(feature)));
 
     return result;
 };

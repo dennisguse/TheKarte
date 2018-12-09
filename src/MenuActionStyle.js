@@ -16,7 +16,7 @@ function MenuActionViewStyleImageScale(theKarte, scaleDiff) {
 MenuActionViewStyleImageScale.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionViewStyleImageScale.prototype.constructor = MenuActionViewStyleImageScale;
 MenuActionViewStyleImageScale.prototype.start = function() {
-    var scaleCurrent = this._theKarte.getLayerActiveStyleContainer().getImageScale();
+    const scaleCurrent = this._theKarte.getLayerActiveStyleContainer().getImageScale();
 
     this._theKarte.getLayerActiveStyleContainer().setImageScale(scaleCurrent * (1 + this._scaleDiff));
     this._theKarte.getLayerActive().changed();

@@ -33,8 +33,8 @@ Creates rendering style.
 @param {int} clusterSize The number of features to be represented.
 */
 StyleCreator.prototype._createStyleRender = function(colorRGB, feature, clusterSize) {
-    var colorFill = colorRGB.createRGBAString(0.5);
-    var colorBorder = colorRGB.createRGBAString(1);
+    const colorFill = colorRGB.createRGBAString(0.5);
+    const colorBorder = colorRGB.createRGBAString(1);
 
     let style = null;
     switch (feature.getGeometry().getType()) {

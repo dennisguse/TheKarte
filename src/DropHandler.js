@@ -72,7 +72,7 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
         return;
     }
 
-    var file = event.dataTransfer.files[0];
+    let file = event.dataTransfer.files[0];
     console.log("DropHandler: got file (" + file.name + ").");
 
     let reader = new FileReader();
@@ -125,45 +125,46 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
 
     //Handle files by extension
     if (event.dataTransfer !== undefined && event.dataTransfer.types.indexOf("Files") >= 0) {
-        let files = event.dataTransfer.files;
+        const files = event.dataTransfer.files;
 
         //Check how multiple files are handled.
         for (let i = 0; i < files.length; i++) {
             let suffix = files[i].name.split('.').pop();
 
-            let format = null;
+            let formatTMP = null;
             console.log("DropHandler: got file (" + files[i].name + ").");
 
             switch (suffix.toLowerCase()) {
                 case "gpx":
-                    format = new ol.format.WKT();
+                    formatTMP = new ol.format.WKT();
                     break;
 
                 case "geojson":
                 case "json":
-                    format = new ol.format.GeoJSON();
+                    formatTMP = new ol.format.GeoJSON();
                     break;
 
                 case "kml":
-                    format = new ol.format.KML({
+                    formatTMP = new ol.format.KML({
                         defaultStyle: null,
                         extractStyles: false
                     });
                     break;
 
                 case "wkt":
-                    format = new ol.format.WKT();
+                    formatTMP = new ol.format.WKT();
                     break;
 
                 default:
                     console.error("DropHandler: don't know how to read file with suffix: " + suffix);
                     break;
             }
+            const format = formatTMP;
             if (format === null) {
                 continue;
             }
 
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function() {
                 let features = format.readFeatures(reader.result, {
                     dataProjection: 'EPSG:4326',

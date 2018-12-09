@@ -130,14 +130,14 @@ MenuActionFeatureFilter.prototype = Object.create(MenuActionMode.prototype);
 MenuActionFeatureFilter.prototype.constructor = MenuActionFeatureFilter;
 MenuActionFeatureFilter.prototype.start = function() {};
 MenuActionFeatureFilter.prototype.handleKeyboardEvent = function(event) {
-    var digit = event.keyCode - 48;
+    let digit = event.keyCode - 48;
     if (0 <= digit && digit <= 9) {
         this._input = this._input * 10 + digit;
     }
 };
 MenuActionFeatureFilter.prototype.stop = function() {
     console.log(this.constructor.name + ": filtering layer " + this._theKarte.getLayerActiveIndex() + " using layer " + this._input);
-    var filteredFeatures = this._theKarte.featuresFilterByLayer(this._theKarte.getLayerActiveIndex(), this._input, this._isInside);
+    const filteredFeatures = this._theKarte.featuresFilterByLayer(this._theKarte.getLayerActiveIndex(), this._input, this._isInside);
     this._theKarte.exportFeatures(filteredFeatures);
 };
 MenuActionFeatureFilter.prototype.abort = function() {

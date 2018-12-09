@@ -48,8 +48,8 @@ The output file name is the original name concatenated with ".kml".
     function loadDrop(event) {
         loadAllowDrop(event);
 
-        var columnLatitude = document.getElementById('choice-latitude').value;
-        var columnLongitude = document.getElementById('choice-longitude').value;
+        const columnLatitude = document.getElementById('choice-latitude').value;
+        const columnLongitude = document.getElementById('choice-longitude').value;
 
         if (!columnLatitude || columnLatitude.length == 0 || !columnLatitude || columnLatitude.length == 0) {
             console.error("TheKarte-csv2kml: no columns defined for coordinates.");
@@ -58,15 +58,15 @@ The output file name is the original name concatenated with ".kml".
         console.log("TheKarte-csv2kml: column latitude: " + columnLatitude + " and column longitude: " + columnLongitude);
 
         if (event.dataTransfer.types.indexOf("Files") >= 0) {
-            var files = event.dataTransfer.files;
+            const files = event.dataTransfer.files;
 
-            for (var i = 0; i < files.length; i++) {
+            for (let i = 0; i < files.length; i++) {
                 console.log("TheKarte-csv2kml: got file (" + files[i].name + ").");
 
                 let fileSuffix = files[i].name.split('.').pop();
 
-                var format = null;
-                var filenameFormat = null;
+                let format = null;
+                let filenameFormat = null;
 
                 switch (fileSuffix.toLowerCase()) {
                     case "csv":
@@ -87,9 +87,9 @@ The output file name is the original name concatenated with ".kml".
                         break
                 }
 
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = function() {
-                    var contentFormatted = format(reader.result, columnLatitude, columnLongitude);
+                    let contentFormatted = format(reader.result, columnLatitude, columnLongitude);
                     if (contentFormatted === undefined) {
                         console.error("TheKarte-csv2kml: could not convert data.");
                         return;
@@ -120,19 +120,19 @@ The output file name is the original name concatenated with ".kml".
     @return {string} The KML data OR undefined.
     */
     function convertCSV2KML(csvString, columnLatitude, columnLongitude) {
-        var csvPapa = Papa.parse(csvString, {
+        const csvPapa = Papa.parse(csvString, {
             header: true,
             trimHeader: true,
             dynamicTyping: true,
             skipEmptyLines: 'greedy'
         });
-        var csvData = csvPapa.data;
+        const csvData = csvPapa.data;
 
         console.log("TheKarte-csv2kml: got " + csvData.length + " rows to convert into KML.");
 
         //Converting to Openlayers features.
-        var features = new Array();
-        for (var i = 0; i < csvData.length; i++) {
+        const features = new Array();
+        for (let i = 0; i < csvData.length; i++) {
             if (csvData[i][columnLatitude] && csvData[i][columnLongitude]) {
                 let latitude = string2number(csvData[i][columnLatitude]);
                 let longitude = string2number(csvData[i][columnLongitude]);
@@ -162,13 +162,13 @@ The output file name is the original name concatenated with ".kml".
     @return {string} The CSV data OR undefined.
     */
     function convertKML2CSV(kmlString, columnLatitude, columnLongitude) {
-        var features = new ol.format.KML().readFeatures(kmlString);
+        const features = new ol.format.KML().readFeatures(kmlString);
 
         console.log("TheKarte-csv2kml: got " + features.length + " features to convert into CSV.");
 
         //Converting to Openlayers features.
-        var featuresCSV = new Array();
-        for (var i = 0; i < features.length; i++) {
+        const featuresCSV = new Array();
+        for (let i = 0; i < features.length; i++) {
             let coordinates = features[i].getGeometry().getCoordinates();
 
             //Get coordinates
@@ -178,7 +178,7 @@ The output file name is the original name concatenated with ".kml".
 
             //Get data
             featureProperties = features[i].getProperties();
-            for (var key in featureProperties) {
+            for (let key in featureProperties) {
                 if (key != features[i].getGeometryName())
                     featureData[key] = featureProperties[key];
             }
@@ -186,7 +186,7 @@ The output file name is the original name concatenated with ".kml".
             featuresCSV.push(featureData);
         }
 
-        var exportString = Papa.unparse(featuresCSV, {
+        const exportString = Papa.unparse(featuresCSV, {
             quotes: false,
             quoteChar: '"',
             escapeChar: '"',
