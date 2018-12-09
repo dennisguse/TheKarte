@@ -27,6 +27,12 @@ module.exports = function(grunt) {
                 }
             }
         },
+        jshint: {
+            all: ['Gruntfile.js', 'src/*.js'],
+            options: {
+                esversion: 6
+            }
+        },
         run: {
             jsdoc: {
                 exec: 'jsdoc --private -d doc src/*.js'
@@ -38,12 +44,14 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-jsbeautifier");
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-run');
 
     //Task(s)
     grunt.registerTask('default', ['jsbeautifier']);
 
     grunt.registerTask('doc', ['jsbeautifier', 'run:jsdoc']);
-    grunt.registerTask('format', ['jsbeautifier'])
-    grunt.registerTask('help', ['run:help'])
+    grunt.registerTask('format', ['jsbeautifier']);
+    grunt.registerTask('help', ['run:help']);
+    grunt.registerTask('lint', ['jshint']);
 };
