@@ -77,7 +77,7 @@
         <script src="src/StyleColorCreator.js"></script>
         <script src="src/StyleCreator.js"></script>
         <script src="src/StyleContainer.js"></script>
-        <script src="src/DropHandler.js"></script>
+        <script src="src/ImportHandler.js"></script>
         <script src="src/TheKarte.js"></script>
     </head>
 
@@ -88,7 +88,7 @@
         theKarte = new TheKarte(
             new StyleCreator(), new StyleColorCreator()
         );
-        const dropHandler = new DropHandler(theKarte);
+        const importHandler = new ImportHandler(theKarte);
 
         const defaultTileSource = new ol.source.OSM();
 
@@ -167,8 +167,8 @@
 
                 //Drop mode
                 ['e', new Map([
-                    ['d', new MenuActionDrop(theKarte, dropHandler, 'geo')],
-                    ['f', new MenuActionDrop(theKarte, dropHandler, 'style')],
+                    ['d', new MenuActionDrop(theKarte, importHandler, 'geo')],
+                    ['f', new MenuActionDrop(theKarte, importHandler, 'style')],
                 ])],
 
                 //Render mode
@@ -194,7 +194,7 @@
             theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
         }.bind(this);
 
-        theKarte.setup(keyboardMenu, dropHandler, userFeedbackCallback, theKarte_MapElement, window, document.body);
+        theKarte.setup(keyboardMenu, importHandler, userFeedbackCallback, theKarte_MapElement, window, document.body);
 
         theKarte.setTileSource(defaultTileSource);
 

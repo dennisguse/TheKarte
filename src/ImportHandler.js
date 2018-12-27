@@ -1,20 +1,21 @@
 /**
-For plain text handles drop- and paste-events and for files drop-events.
-@class DropHandler
+Handles importing of data from user input: for plain text handles drop- and paste-events and for files drop-events.
+
+@class ImportHandler
 @constructor
 */
-function DropHandler(theKarte) {
+function ImportHandler(theKarte) {
     this._theKarte = theKarte;
 
     this._mode = 'geo'; // or 'style'
 }
-DropHandler.prototype.constructor = DropHandler;
+ImportHandler.prototype.constructor = ImportHandler;
 
 /**
 @param {Element} parentElement The HTML element in which triggers dropEvents.
 @param {Element} pasteEventEmitter The HTML element that gets the paste events.
 */
-DropHandler.prototype.setup = function(parentElement, pasteEventEmitter) {
+ImportHandler.prototype.setup = function(parentElement, pasteEventEmitter) {
     parentElement.addEventListener('dragover', this.dropAllow.bind(this));
     parentElement.addEventListener('drop', this.dropHandle.bind(this));
 
@@ -24,7 +25,7 @@ DropHandler.prototype.setup = function(parentElement, pasteEventEmitter) {
 /**
 Handles to start of a drop event.
 */
-DropHandler.prototype.dropAllow = function(event) {
+ImportHandler.prototype.dropAllow = function(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer !== undefined)
@@ -34,7 +35,7 @@ DropHandler.prototype.dropAllow = function(event) {
 /**
 Handles to the drop event.
 */
-DropHandler.prototype.dropHandle = function(event) {
+ImportHandler.prototype.dropHandle = function(event) {
     this.dropAllow(event);
 
     switch (this._mode) {
@@ -52,12 +53,12 @@ Change how the drop-events are handled (i.e., what kind of data is expected).
 
 @param {string} mode either 'geo' or 'style'
 */
-DropHandler.prototype.setMode = function(mode) {
+ImportHandler.prototype.setMode = function(mode) {
     if (['geo', 'style'].indexOf(mode) >= 0) {
         this._mode = mode;
         return;
     }
-    console.error("DropHandler: don't know how to handle: " + mode);
+    console.error("ImportHandler: don't know how to handle: " + mode);
 };
 
 /**
@@ -66,21 +67,21 @@ Handles dragAndDrop-events setting styles (i.e., image for point).
 Replaces the style of the currently active layer.
 NOTE: Accepts only drop request containing _ONE_ file.
 */
-DropHandler.prototype._dragAndDropHandleStyle = function(event) {
+ImportHandler.prototype._dragAndDropHandleStyle = function(event) {
     if (event.dataTransfer.types.indexOf("Files") != 0) {
-        console.error("DropHandler: can only load one image.");
+        console.error("ImportHandler: can only load one image.");
         return;
     }
 
     let file = event.dataTransfer.files[0];
-    console.log("DropHandler: got file (" + file.name + ").");
+    console.log("ImportHandler: got file (" + file.name + ").");
 
     let reader = new FileReader();
     reader.onload = function() {
         let result = reader.result;
         if (!result.startsWith("data:image/")) {
             this._theKarte.sendUserFeedback(false);
-            console.error("DropHandler: file is not an image.");
+            console.error("ImportHandler: file is not an image.");
             return;
         }
 
@@ -91,7 +92,7 @@ DropHandler.prototype._dragAndDropHandleStyle = function(event) {
     }.bind(this);
     reader.onerror = function() {
         this._theKarte.sendUserFeedback(false);
-        console.error("DropHandler: error reading (" + file.name + "): " + reader.error);
+        console.error("ImportHandler: error reading (" + file.name + "): " + reader.error);
     };
     reader.readAsDataURL(file);
 };
@@ -103,12 +104,12 @@ Adds the loaded features to the currently active layer.
 This functions supports as text WKT and as file GPX, GeoJSON, KML, and WKT.
 File content is determined by suffix.
 */
-DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
+ImportHandler.prototype._dragAndDropHandleGeodata = function(event) {
     //Handle text/plain as WKT: DragAndDrop and CopyPaste
     {
         let eventData = event.clipboardData !== undefined ? event.clipboardData : event.dataTransfer;
         if (eventData.types.indexOf("text/plain") >= 0) {
-            console.log("DropHandler: got text. Trying to interpret as WKT.");
+            console.log("ImportHandler: got text. Trying to interpret as WKT.");
             let wkt = new ol.format.WKT();
 
             //let content = event.dataTransfer.getData("text/plain");
@@ -132,7 +133,7 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
             let suffix = files[i].name.split('.').pop();
 
             let formatTMP = null;
-            console.log("DropHandler: got file (" + files[i].name + ").");
+            console.log("ImportHandler: got file (" + files[i].name + ").");
 
             switch (suffix.toLowerCase()) {
                 case "gpx":
@@ -156,7 +157,7 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
                     break;
 
                 default:
-                    console.error("DropHandler: don't know how to read file with suffix: " + suffix);
+                    console.error("ImportHandler: don't know how to read file with suffix: " + suffix);
                     break;
             }
             const format = formatTMP;
@@ -170,11 +171,11 @@ DropHandler.prototype._dragAndDropHandleGeodata = function(event) {
                     dataProjection: 'EPSG:4326',
                     featureProjection: 'EPSG:3857'
                 });
-                console.log("DropHandler: read " + features.length + " features (using EPSG:4326). Adding to current layer.");
+                console.log("ImportHandler: read " + features.length + " features (using EPSG:4326). Adding to current layer.");
                 this._theKarte.getLayerActive().getSource().addFeatures(features);
             }.bind(this);
             reader.onerror = function() {
-                console.error("DropHandler: error reading (" + files[i].name + "): " + reader.error);
+                console.error("ImportHandler: error reading (" + files[i].name + "): " + reader.error);
             };
             reader.readAsText(files[i]);
         }
