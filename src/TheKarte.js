@@ -102,7 +102,7 @@ TheKarte.prototype.exportFeatures = function(features) {
 
     const fileNameToSaveAs = "TheKarte-" + new Date().toJSON() + ".kml";
 
-    TheKarteHelperDownload(fileNameToSaveAs, exportString);
+    TheKarteHelper_Export(fileNameToSaveAs, exportString);
 };
 
 /**
