@@ -65,6 +65,7 @@
 
         <script src="src/ColorRGB.js"></script>
         <script src="src/HelperExport.js"></script>
+        <script src="src/ImportHandler.js"></script>
         <script src="src/HelperDataImportGeo.js"></script>
         <script src="src/MenuActionAbstract.js"></script>
         <script src="src/MenuActionDrop.js"></script>
@@ -78,7 +79,6 @@
         <script src="src/StyleColorCreator.js"></script>
         <script src="src/StyleCreator.js"></script>
         <script src="src/StyleContainer.js"></script>
-        <script src="src/ImportHandler.js"></script>
         <script src="src/TheKarte.js"></script>
     </head>
 
@@ -204,6 +204,9 @@
             event.returnValue = text;
             return text;
         };
+
+        //Autopilot
+        theKarte.autopilot(window.location.search.substr(1).split('&'));
     }
 
     </script>

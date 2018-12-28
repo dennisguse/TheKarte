@@ -85,14 +85,14 @@ ImportHandler.prototype._handleEventStyle = function(event) {
             return;
         }
 
-        this._theKarte.sendUserFeedback(true);
-
         this._theKarte.getLayerActiveStyleContainer().setImage(result);
         this._theKarte.getLayerActive().changed();
+
+        this._theKarte.sendUserFeedback(true);
     }.bind(this);
     reader.onerror = function() {
-        this._theKarte.sendUserFeedback(false);
         console.error("ImportHandler: error reading (" + file.name + "): " + reader.error);
+        this._theKarte.sendUserFeedback(false);
     };
     reader.readAsDataURL(file);
 };

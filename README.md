@@ -43,6 +43,30 @@ Functionality to change the view:
 * zoom to the extend of the current layer, and
 * change rendering method if performance is not sufficient.
 
+## Autopilot
+TheKarte features has an autopilot feature (i.e., allowing to load data and interact with it automatically).
+This scripting feature enables to pre-setup TheKarte if desired.
+
+To use the autopilot, a URL containing the commands must be provided as [location.search](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/search).
+Commands are separated by the variable separator `&` and are executed in order from left to right.
+
+Supported commands:
+* all __configured__ keyboard-based menu commands (spelling must be identical to configuration)
+* `geoText(dataType, TEXT)`
+* `geoURL(dataType, URL)`
+* `styleImageURL(URL)`
+
+
+__ATTENTION__: Please note that the parameters need to be [URI-encoded](https://en.wikipedia.org/wiki/Query_string#URL_encoding) (e.g. `encodeURI()` for JavaScript).
+For example, white spaces need to be encoded as `%20` in a URL. This is relevant especially while using [WKT(https://en.wikipedia.org/wiki/Well-known_text) (e.g., `POINT(1 1)` becomes `POINT(1%201)`).
+
+Some autopilot demos:
+* Draw a point for Berlin (Germany) on the first layer, add a second layer and Paris (France).
+  Berlin is shown in blue and Paris in green as they reside on different layers.  
+  URL: `TheKarte.html?geoText(wkt,POINT(13.03367%2052.41362))&a&a&geoText(wkt,POINT(2.3522219%2048.856614))`
+* Loading a KML file (contain points) and render these using the OpenLayers logo.  
+  URL: `TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)&styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)`
+
 ## Configuration
 TheKarte can be easily configured.
 This mainly considers modifying the settings to your needs or adjusting the keyboard-based menu.

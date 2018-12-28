@@ -1,4 +1,3 @@
-
 /**
 Handles dragAndDrop-events and paste-events for loading geo data.
 Adds the loaded features to the currently active layer.
@@ -18,7 +17,7 @@ Loads data from text.
 function TheKarteHelperDataImport_loadGeoFromText(fileSuffix, fileContent) {
     var format = TheKarteHelperDataImport_getOpenlayerFormat(fileSuffix);
     if (format == null) {
-         return;
+        return;
     }
 
     let features = format.readFeatures(fileContent, {

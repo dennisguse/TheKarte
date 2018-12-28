@@ -302,3 +302,91 @@ TheKarte.prototype.featuresFilterByLayer = function(layerFeatureIndex, layerFilt
 
     return result;
 };
+
+/**
+Parses URL parameters to pre-setup theKarte by executing actions of the keyboardMenu (identical as a user would).
+Individual actions are seperated by '&' and should be urlEncoded if necessary.
+The autopilot also provides limited support for adding data: drop(fileType,fileContent).
+
+Exemplary URL:
+* TheKarte.html?geoText(wkt,POINT(13.03367%2052.41362))
+* TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)
+* TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)&styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)
+
+@param {array<string>} commands The commands as a string.
+*/
+TheKarte.prototype.autopilot = function(commands) {
+    for (let i = 0; i < commands.length; i++) {
+        console.log('TheKarte.autopilot: trying to execute command ' + commands[i]);
+        let command = decodeURIComponent(commands[i]);
+
+        //noop
+        if (command.length == 0) continue;
+
+        //normal command
+        if (command.length == 1) {
+            this._keyboardMenu.handleKeypress(new KeyboardEvent('keyup', {
+                key: command
+            }));
+            continue;
+        }
+
+        //command contains function call
+        if (!(/^[a-zA-Z]+\(.+\)$/.test(command))) {
+            console.error("TheKarte.autopilot: could not parse command " + command);
+            continue;
+        }
+
+        let commandName = command.slice(0, command.indexOf('('));
+        switch (commandName) {
+            case "geoText":
+            case "geoURL":
+                {
+                    if (!(/^[a-zA-Z]+\(.+,.+\)$/.test(command))) {
+                        console.error("TheKarte.autopilot: could not parse geo-command " + command);
+                        continue;
+                    }
+
+                    let commandStrip = command.slice(command.indexOf('(') + 1);
+                    let contentType = commandStrip.slice(0, commandStrip.indexOf(','));
+                    let textOrURL = commandStrip.slice(commandStrip.indexOf(',') + 1, commandStrip.length - 1);
+
+                    let text;
+                    if (commandName === "geoURL") {
+                        let request = new XMLHttpRequest();
+                        request.open("GET", textOrURL, false);
+                        request.send(null);
+
+                        if (request.status == 200) {
+                            text = request.responseText;
+                        } else {
+                            console.error("TheKarte.autopilot: got HTTP-code " + request.status + " for command " + command);
+                        }
+                    } else {
+                        text = textOrURL;
+                    }
+
+
+                    let features = TheKarteHelperDataImport_loadGeoFromText(contentType, text);
+
+                    if (features == null) {
+                        console.log("TheKarte.autopilot: could not parse features from command: " + command);
+                        continue;
+                    }
+                    this.layerActive_addFeatures(features);
+                }
+                continue;
+            case "styleImageURL":
+                {
+                    let commandStrip = command.slice(command.indexOf('(') + 1);
+                    let url = commandStrip.slice(0, commandStrip.length - 1);
+
+                    this.getLayerActiveStyleContainer().setImage(url);
+                    this.getLayerActive().changed();
+                    continue;
+                }
+        }
+
+        console.error('TheKarte.autopilot: could not parse command ' + command + ' - continuing with next command.');
+    }
+};
