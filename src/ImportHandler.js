@@ -17,9 +17,9 @@ ImportHandler.prototype.constructor = ImportHandler;
 */
 ImportHandler.prototype.setup = function(parentElement, pasteEventEmitter) {
     parentElement.addEventListener('dragover', this.dropAllow.bind(this));
-    parentElement.addEventListener('drop', this.dropHandle.bind(this));
+    parentElement.addEventListener('drop', this.handleEvent.bind(this));
 
-    pasteEventEmitter.addEventListener('paste', this.dropHandle.bind(this));
+    pasteEventEmitter.addEventListener('paste', this.handleEvent.bind(this));
 };
 
 /**
@@ -35,15 +35,15 @@ ImportHandler.prototype.dropAllow = function(event) {
 /**
 Handles to the drop event.
 */
-ImportHandler.prototype.dropHandle = function(event) {
+ImportHandler.prototype.handleEvent = function(event) {
     this.dropAllow(event);
 
     switch (this._mode) {
         case 'geo':
-            this._dragAndDropHandleGeodata(event);
+            this._handleEventGeodata(event);
             break;
         case 'style':
-            this._dragAndDropHandleStyle(event);
+            this._handleEventStyle(event);
             break;
     }
 };
@@ -67,7 +67,7 @@ Handles dragAndDrop-events setting styles (i.e., image for point).
 Replaces the style of the currently active layer.
 NOTE: Accepts only drop request containing _ONE_ file.
 */
-ImportHandler.prototype._dragAndDropHandleStyle = function(event) {
+ImportHandler.prototype._handleEventStyle = function(event) {
     if (event.dataTransfer.types.indexOf("Files") != 0) {
         console.error("ImportHandler: can only load one image.");
         return;
@@ -104,23 +104,19 @@ Adds the loaded features to the currently active layer.
 This functions supports as text WKT and as file GPX, GeoJSON, KML, and WKT.
 File content is determined by suffix.
 */
-ImportHandler.prototype._dragAndDropHandleGeodata = function(event) {
+ImportHandler.prototype._handleEventGeodata = function(event) {
     //Handle text/plain as WKT: DragAndDrop and CopyPaste
     {
         let eventData = event.clipboardData !== undefined ? event.clipboardData : event.dataTransfer;
         if (eventData.types.indexOf("text/plain") >= 0) {
             console.log("ImportHandler: got text. Trying to interpret as WKT.");
-            let wkt = new ol.format.WKT();
 
             //let content = event.dataTransfer.getData("text/plain");
             let content = eventData.getData("text/plain");
             console.log(content);
 
-            let features = wkt.readFeatures(content, {
-                dataProjection: 'EPSG:4326',
-                featureProjection: 'EPSG:3857'
-            });
-            this._theKarte.getLayerActive().getSource().addFeatures(features);
+            let features = TheKarteHelperDataImport_loadGeoFromText("wkt", content);
+            this._theKarte.layerActive_addFeatures(features);
         }
     }
 
@@ -130,49 +126,17 @@ ImportHandler.prototype._dragAndDropHandleGeodata = function(event) {
 
         //Check how multiple files are handled.
         for (let i = 0; i < files.length; i++) {
-            let suffix = files[i].name.split('.').pop();
+            const fileSuffix = files[i].name.split('.').pop();
 
-            let formatTMP = null;
             console.log("ImportHandler: got file (" + files[i].name + ").");
-
-            switch (suffix.toLowerCase()) {
-                case "gpx":
-                    formatTMP = new ol.format.WKT();
-                    break;
-
-                case "geojson":
-                case "json":
-                    formatTMP = new ol.format.GeoJSON();
-                    break;
-
-                case "kml":
-                    formatTMP = new ol.format.KML({
-                        defaultStyle: null,
-                        extractStyles: false
-                    });
-                    break;
-
-                case "wkt":
-                    formatTMP = new ol.format.WKT();
-                    break;
-
-                default:
-                    console.error("ImportHandler: don't know how to read file with suffix: " + suffix);
-                    break;
-            }
-            const format = formatTMP;
-            if (format === null) {
-                continue;
-            }
 
             const reader = new FileReader();
             reader.onload = function() {
-                let features = format.readFeatures(reader.result, {
-                    dataProjection: 'EPSG:4326',
-                    featureProjection: 'EPSG:3857'
-                });
-                console.log("ImportHandler: read " + features.length + " features (using EPSG:4326). Adding to current layer.");
-                this._theKarte.getLayerActive().getSource().addFeatures(features);
+                let features = TheKarteHelperDataImport_loadGeoFromText(fileSuffix, reader.result);
+
+                console.log("ImportHandler: Adding to current layer.");
+
+                this._theKarte.layerActive_addFeatures(features);
             }.bind(this);
             reader.onerror = function() {
                 console.error("ImportHandler: error reading (" + files[i].name + "): " + reader.error);

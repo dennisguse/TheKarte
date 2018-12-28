@@ -253,6 +253,14 @@ TheKarte.prototype.layerDelete = function() {
 };
 
 /**
+Adds features to the current active VectorLayer.
+@param(Set<ol.Feature>) features The features to be added.
+*/
+TheKarte.prototype.layerActive_addFeatures = function(features) {
+    this.getLayerActive().getSource().addFeatures(features);
+};
+
+/**
 Filter features of one layer by the features (usually polygons) in another layer.
 
 @param {int} layerFeatureIndex The index of the layer to be filtered.
