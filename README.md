@@ -74,7 +74,7 @@ All relevant code for this resides in `TheKarte.html`.
 To create a new configuration, just copy `TheKarte.html`, modify this copy, and open in your web browser.
 
 ## Technical details
-TheKarte is implemented using [OpenLayers](https://openlayers.org/) and pure (aka vanilla JavaScript).
+TheKarte is implemented using [OpenLayers](https://openlayers.org/) and pure (aka vanilla) JavaScript.
 All map-related and geographical data-related features are provided by OpenLayers.
 
 ## Privacy
