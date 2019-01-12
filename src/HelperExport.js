@@ -9,7 +9,8 @@ function TheKarteHelper_ExportBlob(filename, blob) {
     downloadLink.download = filename;
     downloadLink.innerHTML = "Download File";
     downloadLink.href = window.URL.createObjectURL(blob);
-    downloadLink.click();
+
+    downloadLink.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));
 }
 
 /**
