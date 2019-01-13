@@ -355,9 +355,13 @@ TheKarte.prototype.autopilot = function(commands) {
                     if (commandName === "geoURL") {
                         let request = new XMLHttpRequest();
                         request.open("GET", textOrURL, false);
+                        request.overrideMimeType("text/plain");
+
                         request.send(null);
 
-                        if (request.status == 200) {
+                        if (request.status == 200 || //HTTP 2000: ok
+                            request.status == 0 //For file:/// Chrome reports code 0 (only useful if `chrome --allow-file-access-from-files`).
+                        ) {
                             text = request.responseText;
                         } else {
                             console.error("TheKarte.autopilot: got HTTP-code " + request.status + " for command " + command);
