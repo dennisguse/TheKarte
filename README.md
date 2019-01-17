@@ -57,7 +57,7 @@ Supported commands:
 * `styleImageURL(URL)`
 * `screenshot(filename)`
 
-__ATTENTION__: Please note that the parameters need to be [URI-encoded](https://en.wikipedia.org/wiki/Query_string#URL_encoding) (e.g. `encodeURI()` for JavaScript).
+__ATTENTION__: Please note that the parameters _usually_ need (depending on your browser) to be [URI-encoded](https://en.wikipedia.org/wiki/Query_string#URL_encoding) (e.g. `encodeURI()` for JavaScript).
 For example, white spaces need to be encoded as `%20` in a URL. This is relevant especially while using [WKT(https://en.wikipedia.org/wiki/Well-known_text) (e.g., `POINT(1 1)` becomes `POINT(1%201)`).
 
 Some autopilot demos:
@@ -66,9 +66,15 @@ Some autopilot demos:
   URL: `TheKarte.html?geoText(wkt,POINT(13.03367%2052.41362))&a&a&geoText(wkt,POINT(2.3522219%2048.856614))`
 * Loading a KML file (contain points) and render these using the OpenLayers logo.  
   URL: `TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)&styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)`
-* Creates a screenshot and exports it as _TheKarte-screenshot.png_ to the local device (usually the download-folder).
+* Creates a screenshot and exports it as _TheKarte-screenshot.png_ to the local device (usually the download-folder).  
   URL:
   `TheKarte.html?screenshot(TheKarte-screenshot.png)`
+* Load a local KML file (here: `Berlin.kml`).  
+  URL: `file:///home/user/TheKarte/TheKarte?geoURL(kml, file:///home/user/TheKarte/data/Berlin.kml)`
+  __ATTENTION:__ Access to local files and folders (i.e., `file:///`) is __usually__ not permitted from a HTML-page, as this is considered a __security risk__.  
+  * [Firefox](http://firefox.com): If the HTML-page was loaded from `file:///`, then files below this path can accessed. The path needs to be absolute.  
+  * [Chrome/Chromium](https://www.google.com/intl/en_ALL/chrome/): Needs to be started with a command line parameter. Due to security implications this option is omitted here.
+
 
 ## Configuration
 TheKarte can be easily configured.
