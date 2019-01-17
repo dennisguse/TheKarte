@@ -39,20 +39,8 @@ function MenuActionExportPNG(theKarte) {
 MenuActionExportPNG.prototype = Object.create(MenuActionOnce.prototype);
 MenuActionExportPNG.prototype.constructor = MenuActionExportPNG;
 MenuActionExportPNG.prototype.start = function() {
-    this._theKarte.getMap().once("rendercomplete", this._onRenderComplete.bind(this));
-
-    //Trigger rerendering.
-    this._theKarte.getMap().renderSync();
+    this._theKarte.exportScreenshot();
 };
-MenuActionExportPNG.prototype._onRenderComplete = function(event) {
-    let canvas = event.context.canvas;
-
-    canvas.toBlob(this._onBlobComplete.bind(this), 'image/png');
-};
-MenuActionExportPNG.prototype._onBlobComplete = function(blob) {
-    TheKarteHelper_ExportBlob("TheKarte-" + new Date().toJSON() + ".png", blob);
-};
-
 MenuActionExportPNG.prototype.getDescription = function() {
     return "Export the current visible area as PNG to your local device.";
 };

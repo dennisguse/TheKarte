@@ -394,3 +394,26 @@ TheKarte.prototype.autopilot = function(commands) {
         console.error('TheKarte.autopilot: could not parse command ' + command + ' - continuing with next command.');
     }
 };
+
+/**
+Creates and exports a screenshot of the currently shown map.
+Screenshot is export as PNG and downloaded to the local device.
+@param {string} filename The filename.
+*/
+TheKarte.prototype.exportScreenshot = function(filename) {
+    filename = filename !== undefined ? filename : "TheKarte-" + new Date().toJSON() + ".png";
+    this.getMap().once("rendercomplete",
+        function(event) {
+            let canvas = event.context.canvas;
+
+            canvas.toBlob(
+                function(blob) {
+                    TheKarteHelper_ExportBlob(filename, blob);
+                }
+                , 'image/png');
+        }
+    );
+
+    //Trigger re-rendering.
+    this.getMap().renderSync();
+};
