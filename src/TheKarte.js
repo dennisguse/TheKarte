@@ -389,6 +389,18 @@ TheKarte.prototype.autopilot = function(commands) {
                     this.getLayerActive().changed();
                     continue;
                 }
+            case "screenshot":
+                {
+                    let commandStrip = command.slice(command.indexOf('(') + 1);
+                    let filename = commandStrip.slice(0, commandStrip.length - 1);
+
+                    this.exportScreenshot(filename);
+                    continue;
+                }
+            default:
+                {
+                    console.error("TheKarte.autopilot: invalid command " + commandName);
+                }
         }
 
         console.error('TheKarte.autopilot: could not parse command ' + command + ' - continuing with next command.');
@@ -409,8 +421,7 @@ TheKarte.prototype.exportScreenshot = function(filename) {
             canvas.toBlob(
                 function(blob) {
                     TheKarteHelper_ExportBlob(filename, blob);
-                }
-                , 'image/png');
+                }, 'image/png');
         }
     );
 

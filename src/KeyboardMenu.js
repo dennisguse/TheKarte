@@ -86,7 +86,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //Could we navigate lower?
     if (!(actionMapSubset instanceof Map)) {
         this._userFeedbackCallback(false);
-        return;h
+        return;
     }
 
     //Is it a command key?

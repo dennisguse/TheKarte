@@ -55,7 +55,7 @@ Supported commands:
 * `geoText(dataType, TEXT)`
 * `geoURL(dataType, URL)`
 * `styleImageURL(URL)`
-
+* `screenshot(filename)`
 
 __ATTENTION__: Please note that the parameters need to be [URI-encoded](https://en.wikipedia.org/wiki/Query_string#URL_encoding) (e.g. `encodeURI()` for JavaScript).
 For example, white spaces need to be encoded as `%20` in a URL. This is relevant especially while using [WKT(https://en.wikipedia.org/wiki/Well-known_text) (e.g., `POINT(1 1)` becomes `POINT(1%201)`).
@@ -66,6 +66,9 @@ Some autopilot demos:
   URL: `TheKarte.html?geoText(wkt,POINT(13.03367%2052.41362))&a&a&geoText(wkt,POINT(2.3522219%2048.856614))`
 * Loading a KML file (contain points) and render these using the OpenLayers logo.  
   URL: `TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)&styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)`
+* Creates a screenshot and exports it as _TheKarte-screenshot.png_ to the local device (usually the download-folder).
+  URL:
+  `TheKarte.html?screenshot(TheKarte-screenshot.png)`
 
 ## Configuration
 TheKarte can be easily configured.
