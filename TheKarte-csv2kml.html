@@ -30,7 +30,7 @@ The output file name is the original name concatenated with ".kml".
 
     </style>
 
-    <script src="src/HelperDownload.js"></script>
+    <script src="src/HelperExport.js"></script>
 
     <script>
     /**
@@ -98,7 +98,7 @@ The output file name is the original name concatenated with ".kml".
                     console.log("TheKarte-csv2kml: content of " + reader.filename);
                     console.log(contentFormatted);
 
-                    TheKarteHelperDownload(filenameFormat(reader.filename), contentFormatted);
+                    TheKarteHelper_ExportString(filenameFormat(reader.filename), contentFormatted);
                 };
                 reader.onerror = function() {
                     console.log("TheKarte-csv2kml: error during reading: " + reader.error);
@@ -236,17 +236,18 @@ The output file name is the original name concatenated with ".kml".
                         <input list="latitude-flavors" id="choice-latitude" />
 
                         <datalist id="latitude-flavors">
-                        <option value="x">
-                        <option value="Latitude">
-                        <option value="lat">
-                    </datalist> </td>
+                            <option value="y">
+                            <option value="Latitude">
+                            <option value="lat">
+                        </datalist>
+                    </td>
                 </tr>
                 <tr>
                     <td align="right"><label for="choice-longitude">Longitude column:</label></td>
                     <td align="left">
                         <input list="longitude-flavors" id="choice-longitude" />
                         <datalist id="longitude-flavors">
-                            <option value="y">
+                            <option value="x">
                             <option value="longitude">
                             <option value="lon">
                         </datalist>
