@@ -44,8 +44,11 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         actionMapSubset = actionMapSubset.get(this._stack[i]);
     }
 
+    let currentKey = event.key.toLowerCase();
+    console.log(this.constructor.name + ": got key (" + currentKey + ").");
     //Navigate up in menu
-    if (event.key === this._keyNavigateUp) {
+    if (currentKey === this._keyNavigateUp) {
+        console.log(this.constructor.name + ": navigating up.");
         this._userFeedbackCallback(true);
 
         if (actionMapSubset instanceof MenuActionMode) {
@@ -56,14 +59,20 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         event.stopPropagation();
         return;
     }
+
     //Execute action
-    if (event.key === this._keyExecuteAction && actionMapSubset instanceof MenuActionMode) {
-        this._userFeedbackCallback(true);
+    if (currentKey === this._keyExecuteAction) {
+        if (actionMapSubset instanceof MenuActionMode) {
+            console.log(this.constructor.name + ": executing action.");
+            this._userFeedbackCallback(true);
 
-        actionMapSubset.stop();
+            actionMapSubset.stop();
 
-        this._stack.pop();
-        event.stopPropagation();
+            this._stack.pop();
+            event.stopPropagation();
+        } else {
+            console.warn(this.construtor.name + ": no action select; nothing will happen.");
+        }
         return;
     }
 
@@ -77,14 +86,13 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //Could we navigate lower?
     if (!(actionMapSubset instanceof Map)) {
         this._userFeedbackCallback(false);
-        return;
+        return;h
     }
 
-    //Is it a regular key?
-    let currentKey = event.key.toLowerCase();
+    //Is it a command key?
     if (currentKey === null) {
         this._userFeedbackCallback(false);
-        console.warn(this.constructor.name + ": key " + currentKey + " not found in this (sub-)menu.");
+        console.warn(this.constructor.name + ": key (" + currentKey + ") not found in this (sub-)menu.");
         return;
     }
 
@@ -108,6 +116,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     }
 
     this._userFeedbackCallback(false);
+    console.warn(this.constructor.name + ": no action associated; nothing will happen.");
 };
 
 /**
