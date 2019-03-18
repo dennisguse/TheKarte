@@ -1,6 +1,28 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        assets_inline: {
+            options: {
+                minify: false,
+                verbose: true
+            },
+            all: {
+                files: [
+                    {
+                        src: 'TheKarte.html',
+                        dest: 'dist/TheKarte.html'
+                    },
+                    {
+                        src: 'TheKarte-csv2kml.html',
+                        dest: 'dist/TheKarte-csv2kml.html'
+                    },
+                    {
+                        src: 'TheKarte-geocoder-OSM-nominatim.html',
+                        dest: 'dist/TheKarte-geocoder-OSM-nominatim.html'
+                    },
+                ],
+            },
+        },
         jsbeautifier: {
             files: ['*.html', 'src/*.js', 'Gruntfile.js', 'package.json'],
             options: {
@@ -43,6 +65,7 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-assets-inline');
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-run');
@@ -54,4 +77,5 @@ module.exports = function(grunt) {
     grunt.registerTask('format', ['jsbeautifier']);
     grunt.registerTask('help', ['run:help']);
     grunt.registerTask('lint', ['jshint']);
+    grunt.registerTask('dist', ['assets_inline']);
 };
