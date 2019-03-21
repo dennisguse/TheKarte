@@ -12,7 +12,7 @@ Coordinates are exported in WGS84.
     </head>
 
     <style>
-    .area {
+    .dropArea {
         height: 30em;
         width: 30em;
         margin-top: 1em;
@@ -102,7 +102,9 @@ Coordinates are exported in WGS84.
                 <b>NOTE:</b> If nominatim could not determine an address, then nothing is shown.
             </p>
             <input type="button" value="Start" onclick="geocode(document.getElementById('inputArea'))"></input>
-            <textarea id="inputArea" class="area"></textarea>
+            <div class="dropArea">
+                <textarea id="inputArea" class="dropArea"></textarea>
+            </div>
         </div>
     </body>
 
