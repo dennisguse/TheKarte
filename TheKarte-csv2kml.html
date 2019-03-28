@@ -64,6 +64,8 @@ The output file name is the original name concatenated with ".kml".
                 console.log("TheKarte-csv2kml: got file (" + files[i].name + ").");
 
                 let fileSuffix = files[i].name.split('.').pop();
+                if (fileSuffix === undefined)
+                    fileSuffix = "";
 
                 let format = null;
                 let filenameFormat = null;
