@@ -7,8 +7,7 @@ module.exports = function(grunt) {
                 verbose: true
             },
             all: {
-                files: [
-                    {
+                files: [{
                         src: 'TheKarte.html',
                         dest: 'dist/TheKarte.html'
                     },
