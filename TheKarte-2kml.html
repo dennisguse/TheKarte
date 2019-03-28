@@ -77,6 +77,12 @@ The output file name is the original name concatenated with ".kml".
                             return filename + ".kml"
                         };
                         break;
+                    case "json":
+                        format = convertJSON2KML;
+                        filenameFormat = function(filename) {
+                            return filename + ".kml"
+                        };
+                        break;
                     case "kml":
                         format = convertKML2CSV;
                         filenameFormat = function(filename) {
@@ -130,22 +136,48 @@ The output file name is the original name concatenated with ".kml".
         });
         const csvData = csvPapa.data;
 
-        console.log("TheKarte-csv2kml: got " + csvData.length + " rows to convert into KML.");
+        return converArray2KML(csvData, columnLatitude, columnLongitude);
+    }
+
+    /**
+    Converts loaded JSON data into KML string.
+
+    @param {string} JSONString JSON data as string.
+    @param {string} columnLatitude The JSON field containing the latitude.
+    @param {string} columnLongitude The JSON field containing the longitude.
+    @return {string} The KML data OR undefined.
+    */
+    function convertJSON2KML(jsonString, columnLatitude, columnLongitude) {
+        const jsonData = JSON.parse(jsonString);
+
+        return converArray2KML(jsonData, columnLatitude, columnLongitude);
+    }
+
+    /**
+    Converts JavaScript Array<Map> data into KML string.
+
+    @param {string} arrayData Array<Map>.
+    @param {string} columnLatitude The Array field containing the latitude.
+    @param {string} columnLongitude The Array field containing the longitude.
+    @return {string} The KML data OR undefined.
+    */
+    function converArray2KML(arrayData, columnLatitude, columnLongitude) {
+        console.log("TheKarte-csv2kml: got " + arrayData.length + " rows to convert into KML.");
 
         //Converting to Openlayers features.
         const features = new Array();
-        for (let i = 0; i < csvData.length; i++) {
-            if (csvData[i][columnLatitude] && csvData[i][columnLongitude]) {
-                let latitude = string2number(csvData[i][columnLatitude]);
-                let longitude = string2number(csvData[i][columnLongitude]);
+        for (let i = 0; i < arrayData.length; i++) {
+            if (arrayData[i][columnLatitude] && arrayData[i][columnLongitude]) {
+                let latitude = string2number(arrayData[i][columnLatitude]);
+                let longitude = string2number(arrayData[i][columnLongitude]);
 
                 console.info("csv2kml: got (" + latitude + ", " + longitude + ")");
                 let point = new ol.geom.Point([latitude, longitude]);
                 let feature = new ol.Feature(point);
 
-                delete csvData[i][columnLatitude];
-                delete csvData[i][columnLongitude];
-                feature.setProperties(csvData[i]);
+                delete arrayData[i][columnLatitude];
+                delete arrayData[i][columnLongitude];
+                feature.setProperties(arrayData[i]);
 
                 features.push(feature);
             }
