@@ -72,7 +72,7 @@ The following _file formats_ are accepted:
 * _GPS exchange format (GPX):_ file suffix __'.gpx'__,
 * _GeoJSON:_ file suffix __'.json'__ or __'.geojson'__.
 * _Well-known text (WKT):_ file suffix __'.wkt'__
-  WKT can also be loaded by dragging it as _text_ onto TheKarte.
+  WKT can also be loaded by _(a)_ dragging it as _text_ and _(b)_ pasting it onto TheKarte.
 
 Moreover, two _tools_ are included for data conversion:
 * _TheKarte-2kml.html_: convert CSV-files and JSON-files to KML as well as KML to CSV.
