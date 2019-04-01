@@ -83,143 +83,168 @@
     </head>
 
     <script>
-    var theKarte;
+    //Print version and other information
+    console.log("TheKarte\n===\n");
 
-    function TheKarteLoad() {
-        theKarte = new TheKarte(
-            new StyleCreator(), new StyleColorCreator()
-        );
-        const importHandler = new ImportHandler(theKarte);
+    //Configure theKarte incl. keyboard-based menu.
+    var theKarte = undefined;
+    theKarte = new TheKarte(
+        new StyleCreator(), new StyleColorCreator()
+    );
+    const importHandler = new ImportHandler(theKarte);
 
-        const defaultTileSource = new ol.source.OSM();
+    const defaultTileSource = new ol.source.OSM();
 
-        const keyboardMenu = new KeyboardMenu(
-            "g",
-            "v",
+    const keyboardMenu = new KeyboardMenu(
+        "g",
+        "v",
 
-            new Map([
-                //show menu structure
-                ['h', new MenuActionHelp(theKarte)],
+        new Map([
+            //show menu structure
+            ['h', new MenuActionHelp(theKarte)],
 
-                //Insert
-                ['a', new Map([
-                    ['a', new MenuActionLayerAdd(theKarte)],
-                    ['s', new MenuActionFeatureAdd(theKarte, 'Point')],
-                    ['d', new MenuActionFeatureAdd(theKarte, 'Polygon')],
-                    ['f', new MenuActionFeatureAdd(theKarte, 'Circle')]
-                ])],
+            //Insert
+            ['a', new Map([
+                ['a', new MenuActionLayerAdd(theKarte)],
+                ['s', new MenuActionFeatureAdd(theKarte, 'Point')],
+                ['d', new MenuActionFeatureAdd(theKarte, 'Polygon')],
+                ['f', new MenuActionFeatureAdd(theKarte, 'Circle')]
+            ])],
 
-                //Delete
+            //Delete
+            ['s', new Map([
+                ['a', new MenuActionLayerDelete(theKarte)],
+                ['s', new MenuActionFeatureDelete(theKarte)]
+            ])],
+
+            //Select and modify
+            ['d', new Map([
+                ['a', new MenuActionLayerSelect(theKarte)],
+                ['s', new MenuActionFeatureModify(theKarte)]
+            ])],
+
+            //Style
+            ['f', new Map([
+                ['a', new MenuActionViewExtent(theKarte)],
+
                 ['s', new Map([
-                    ['a', new MenuActionLayerDelete(theKarte)],
-                    ['s', new MenuActionFeatureDelete(theKarte)]
+                    ['d', new MenuActionViewClippingLayer(theKarte, true)],
+                    ['f', new MenuActionViewClippingLayer(theKarte, false)]
                 ])],
 
-                //Select and modify
                 ['d', new Map([
-                    ['a', new MenuActionLayerSelect(theKarte)],
-                    ['s', new MenuActionFeatureModify(theKarte)]
+                    ['d', new MenuActionViewStyleImageScale(theKarte, 0.1)],
+                    ['f', new MenuActionViewStyleImageScale(theKarte, -0.1)],
                 ])],
 
-                //Style
-                ['f', new Map([
-                    ['a', new MenuActionViewExtent(theKarte)],
+                ['f', new MenuActionViewClusterToggle(theKarte, 40)]
+            ])],
 
-                    ['s', new Map([
-                        ['d', new MenuActionViewClippingLayer(theKarte, true)],
-                        ['f', new MenuActionViewClippingLayer(theKarte, false)]
-                    ])],
+            //Map style: set tile layer
+            ['q', new Map([
+                ['a', new MenuActionViewTile(theKarte, defaultTileSource)],
+                ['s', new MenuActionViewTile(theKarte, new ol.source.XYZ({
+                    attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+                }))],
+                ['d', new MenuActionViewTile(theKarte, new ol.source.TileImage({
+                    attributions: 'Tiles  © <a href="https://www.google.com/permissions/geoguidelines/">Google</a>',
+                    url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
+                }))],
+                ['f', new MenuActionViewTile(theKarte, new ol.source.Stamen({
+                    layer: 'toner'
+                }))]
+            ])],
 
-                    ['d', new Map([
-                        ['d', new MenuActionViewStyleImageScale(theKarte, 0.1)],
-                        ['f', new MenuActionViewStyleImageScale(theKarte, -0.1)],
-                    ])],
-
-                    ['f', new MenuActionViewClusterToggle(theKarte, 40)]
+            //Export
+            ['w', new Map([
+                ['a', new Map([
+                    ['d', new MenuActionExportKML(theKarte, true)],
+                    ['f', new MenuActionExportKML(theKarte, false)]
                 ])],
-
-                //Map style: set tile layer
-                ['q', new Map([
-                    ['a', new MenuActionViewTile(theKarte, defaultTileSource)],
-                    ['s', new MenuActionViewTile(theKarte, new ol.source.XYZ({
-                        attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
-                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-                    }))],
-                    ['d', new MenuActionViewTile(theKarte, new ol.source.TileImage({
-                        attributions: 'Tiles  © <a href="https://www.google.com/permissions/geoguidelines/">Google</a>',
-                        url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0'
-                    }))],
-                    ['f', new MenuActionViewTile(theKarte, new ol.source.Stamen({
-                        layer: 'toner'
-                    }))]
+                ['s', new Map([
+                    ['d', new MenuActionFeatureFilter(theKarte, false)],
+                    ['f', new MenuActionFeatureFilter(theKarte, true)]
                 ])],
+                ['d', new MenuActionExportPNG(theKarte)]
+            ])],
 
-                //Export
-                ['w', new Map([
-                    ['a', new Map([
-                        ['d', new MenuActionExportKML(theKarte, true)],
-                        ['f', new MenuActionExportKML(theKarte, false)]
-                    ])],
-                    ['s', new Map([
-                        ['d', new MenuActionFeatureFilter(theKarte, false)],
-                        ['f', new MenuActionFeatureFilter(theKarte, true)]
-                    ])],
-                    ['d', new MenuActionExportPNG(theKarte)]
-                ])],
+            //Drop mode
+            ['e', new Map([
+                ['d', new MenuActionDrop(theKarte, importHandler, 'geo')],
+                ['f', new MenuActionDrop(theKarte, importHandler, 'style')],
+            ])],
 
-                //Drop mode
-                ['e', new Map([
-                    ['d', new MenuActionDrop(theKarte, importHandler, 'geo')],
-                    ['f', new MenuActionDrop(theKarte, importHandler, 'style')],
-                ])],
+            //Render mode
+            ['r', new Map([
+                ['d', new MenuActionViewPerformance(theKarte, true)],
+                ['f', new MenuActionViewPerformance(theKarte, false)]
+            ])]
+        ])
+    );
 
-                //Render mode
-                ['r', new Map([
-                    ['d', new MenuActionViewPerformance(theKarte, true)],
-                    ['f', new MenuActionViewPerformance(theKarte, false)]
-                ])]
-            ])
-        );
-
-        const theKarte_MapElement = document.createElement("div");
-        theKarte_MapElement.id = "theKarteMap";
-        document.body.append(theKarte_MapElement);
-
-        const theKarte_FeedbackElement = document.createElement("div");
-        theKarte_FeedbackElement.id = "theKarteFeedback";
-        document.body.append(theKarte_FeedbackElement);
-
-        const userFeedbackCallback = function(isOk) {
-            theKarte_FeedbackElement.classList.remove("feedbackOk");
-            theKarte_FeedbackElement.classList.remove("feedbackError");
-            void theKarte_FeedbackElement.offsetWidth;
-            theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
-        }.bind(this);
-
-        theKarte.setup(keyboardMenu, importHandler, userFeedbackCallback, theKarte_MapElement, window, document.body);
-
-        theKarte.setTileSource(defaultTileSource);
-
-        window.onbeforeunload = function(event) {
-            const text = "Do want to reload/close this application? All data will be lost.";
-            event.returnValue = text;
-            return text;
-        };
-
-        //Autopilot
-        let autopilotCommand = window.location.search.substr(1);
-        if (autopilotCommand.length > 0) {
-            theKarte.autopilot(autopilotCommand.split('&'));
-        }
-
-        //Print menu to console
-        console.log("TheKarte\n===\n");
-        console.log(keyboardMenu.toString());
-    }
+    //Print menu to console
+    console.log(keyboardMenu.toString());
 
     </script>
 
-    <body onload="TheKarteLoad()">
+    <script>
+    function onLoaded() {
+        if (theKarte === undefined) {
+            //Some resources (JavaScript files) could not be loaded.
+            document.body.firstElementChild.innerHTML += "<br><i>One or more resources failed to load:<\/i> Please check in the brower's developer console.";
+            return;
+        }
+        document.body.firstElementChild.innerHTML += "<br>All resources were loaded.";
+
+        try {
+            //Setup UI if all resources were loaded.
+            document.body.firstElementChild.innerHTML += "<br>Starting TheKarte...";
+
+            const theKarte_FeedbackElement = document.createElement("div");
+            theKarte_FeedbackElement.id = "theKarteFeedback";
+            document.body.append(theKarte_FeedbackElement);
+
+            const userFeedbackCallback = function(isOk) {
+                theKarte_FeedbackElement.classList.remove("feedbackOk");
+                theKarte_FeedbackElement.classList.remove("feedbackError");
+                void theKarte_FeedbackElement.offsetWidth;
+                theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
+            }.bind(this);
+
+            document.body.innerHTML = "";
+            const theKarte_MapElement = document.createElement("div");
+            theKarte_MapElement.id = "theKarteMap";
+            document.body.append(theKarte_MapElement);
+            theKarte.setup(keyboardMenu, importHandler, userFeedbackCallback, theKarte_MapElement, window, document.body);
+
+            theKarte.setTileSource(defaultTileSource);
+
+            //Autopilot
+            let autopilotCommand = window.location.search.substr(1);
+            if (autopilotCommand.length > 0) {
+                theKarte.autopilot(autopilotCommand.split('&'));
+            }
+
+            window.onbeforeunload = function(event) {
+                const text = "Do want to reload/close this application? All data will be lost.";
+                event.returnValue = text;
+                return text;
+            };
+
+        } catch (e) {
+            //Something went wrong...
+            document.body.firstElementChild.innerHTML += "<br><i>Failed to start TheKarte:<\/i> Please check in the brower's developer console.";
+        }
+    }
+
+    </script>
+    </head>
+
+    <body onload="onLoaded()">
+        <p style="text-align:center">
+            TheKarte is loading...
+        </p>
     </body>
 
 </html>
