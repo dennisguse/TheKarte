@@ -12,8 +12,8 @@ module.exports = function(grunt) {
                         dest: 'dist/TheKarte.html'
                     },
                     {
-                        src: 'TheKarte-csv2kml.html',
-                        dest: 'dist/TheKarte-csv2kml.html'
+                        src: 'TheKarte-2kml.html',
+                        dest: 'dist/TheKarte-2kml.html'
                     },
                     {
                         src: 'TheKarte-geocoder-OSM-nominatim.html',
@@ -75,9 +75,9 @@ module.exports = function(grunt) {
     //Task(s)
     grunt.registerTask('default', ['jsbeautifier']);
 
-    grunt.registerTask('doc', ['jsbeautifier', 'run:jsdoc']);
+    grunt.registerTask('doc', ['run:jsdoc']);
     grunt.registerTask('format', ['jsbeautifier']);
     grunt.registerTask('help', ['run:help']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('dist', ['run:insertVersion', 'assets_inline']);
+    grunt.registerTask('dist', ['run:insertVersion', 'run:jsdoc', 'assets_inline']);
 };
