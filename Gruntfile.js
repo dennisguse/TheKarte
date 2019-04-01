@@ -58,6 +58,9 @@ module.exports = function(grunt) {
             jsdoc: {
                 exec: 'jsdoc --private -d doc src/*.js'
             },
+            insertVersion: {
+                exec: 'sed -i -e "s>package.json:description><%= pkg.description %>>" -e "s>package.json:version><%= pkg.version %>>" -e "s>package.json:homepage><%= pkg.homepage.replace(">"> "\>") %>>g" -e "s>package.json:license><%= pkg.license %>>g" TheKarte.html'
+            },
             help: {
                 exec: 'grunt --help'
             }
@@ -76,5 +79,5 @@ module.exports = function(grunt) {
     grunt.registerTask('format', ['jsbeautifier']);
     grunt.registerTask('help', ['run:help']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('dist', ['assets_inline']);
+    grunt.registerTask('dist', ['run:insertVersion', 'assets_inline']);
 };
