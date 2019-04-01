@@ -9,6 +9,7 @@ It was designed with two design criteria in mind:
 
 _TheKarte_ uses a VI-inspired menu for interacting with the map.
 Therefore, the application does not _contain_ any buttons or other UI components beside the map.
+Moreover, TheKarte is implemented as [single page application](https://en.wikipedia.org/wiki/Single-page_application).
 
 ## Functionality
 Functionality for data handling:
@@ -54,7 +55,7 @@ On example on how to use TheKarte (in brackets are the keys to pressed for the k
   3. When you are done: press __'v'__ to stop drawing while remaining in __'a'__ sub-menu.
 2. _Add a new layer:_ press __'a'__ to execute _MenuActionLayerAdd_. This action is immediately executed and thus __'v'__ is not necessary.
 3. _Draw circles:_
-  1. Press __'f'__ to execute MenuActionFeatureAdd(Circle).
+  1. Press __'f'__ to execute _MenuActionFeatureAdd(Circle)_.
   2. Click on desired locations to draw new circles.
   3. When you are done: press __'v'__ (twice) to stop drawing and navigating to the _main menu_.
 4. _Export created data as KML:_ press __'w'__, __'a'__ and then __'d'__.
@@ -83,6 +84,11 @@ By default, some background map services (i.e., [Web Map Service (WMS)](https://
 
 __PRIVACY ISSUE:__ Please be aware that by using such services you _(a)_ download data from them and therefore _(b)_ these can derive, which parts of the world you are looking at (incl. zoom level).
 If this is an issue, please use your own WMS (e.g., export of OpenStreetMap).
+
+### Screenshots
+TheKarte enables to export the map as PNG image. See action _MenuActionExportPNG_.
+An exported image has the exact resolution of the map, which is by default identical to the map shown on the screen.
+_Hint:_ The resolution can be increased by zooming out using the brower's zoom feature and respositing the map.
 
 ### Configuration
 TheKarte can be easily configured.
