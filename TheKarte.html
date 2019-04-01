@@ -207,7 +207,10 @@
         };
 
         //Autopilot
-        theKarte.autopilot(window.location.search.substr(1).split('&'));
+        let autopilotCommand = window.location.search.substr(1);
+        if (autopilotCommand.length > 0) {
+            theKarte.autopilot(autopilotCommand.split('&'));
+        }
     }
 
     </script>
