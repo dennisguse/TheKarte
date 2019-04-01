@@ -45,25 +45,27 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     }
 
     let currentKey = event.key.toLowerCase();
-    console.log(this.constructor.name + ": got key (" + currentKey + ").");
+    //console.info(this.constructor.name + ": got key (" + currentKey + ").");
+
     //Navigate up in menu
     if (currentKey === this._keyNavigateUp) {
         console.log(this.constructor.name + ": navigating up.");
+        this._stack.pop();
+        console.log(this.constructor.name + ": " + this._formatStack());
+        event.stopPropagation();
         this._userFeedbackCallback(true);
 
         if (actionMapSubset instanceof MenuActionMode) {
             actionMapSubset.abort();
         }
 
-        this._stack.pop();
-        event.stopPropagation();
         return;
     }
 
     //Execute action
     if (currentKey === this._keyExecuteAction) {
         if (actionMapSubset instanceof MenuActionMode) {
-            console.log(this.constructor.name + ": executing action.");
+            console.log(this.constructor.name + ": executing action. " + actionMapSubset.toString());
             this._userFeedbackCallback(true);
 
             actionMapSubset.stop();
@@ -71,7 +73,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
             this._stack.pop();
             event.stopPropagation();
         } else {
-            console.warn(this.construtor.name + ": no action select; nothing will happen.");
+            console.warn(this.constructor.name + ": no action selected; nothing will happen.");
         }
         return;
     }
@@ -92,7 +94,8 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //Is it a command key?
     if (currentKey === null) {
         this._userFeedbackCallback(false);
-        console.warn(this.constructor.name + ": key (" + currentKey + ") not found in this (sub-)menu.");
+        console.warn(this.constructor.name + ": (" + currentKey + ") not found in this (sub-)menu.");
+        console.log(this.constructor.name + ": " + this._formatStack());
         return;
     }
 
@@ -101,22 +104,39 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         this._userFeedbackCallback(true);
 
         if (actionMapNext instanceof MenuActionAbstract) {
-            console.log(this.constructor.name + ": executing " + actionMapNext.toString());
+            console.log(this.constructor.name + ": " + this._formatStack(currentKey) + " executing " + actionMapNext.toString());
             actionMapNext.start();
-        } else if (actionMapNext instanceof MenuActionMode) {
-            console.log(this.constructor.name + ": executing " + actionMapNext.toString() + " " + actionMapNext.getDescription());
-        } else {
-            console.log(this.constructor.name + ": entering submenu (" + currentKey + ").");
+            return;
         }
 
         if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionMode) {
             this._stack.push(currentKey);
+
+            console.log(this.constructor.name + ": (" + currentKey + ") entering submenu.");
+            console.log(this.constructor.name + ": " + this._formatStack());
+
+            if (actionMapNext instanceof MenuActionMode) {
+                console.log(this.constructor.name + ": starting " + actionMapNext.toString() + " " + actionMapNext.getDescription());
+            }
         }
         return;
     }
 
     this._userFeedbackCallback(false);
-    console.warn(this.constructor.name + ": no action associated; nothing will happen.");
+    console.warn(this.constructor.name + ": (" + currentKey + ") no action associated; nothing will happen.");
+};
+
+/**
+Formats the stack to be printed to console.
+*/
+KeyboardMenu.prototype._formatStack = function(suffix) {
+    let stack = this._stack;
+
+    if (suffix !== undefined) {
+        stack = stack.concat(suffix);
+    }
+
+    return ["top"].concat(stack).map(x => "(" + x + ")").join(", ");
 };
 
 /**
