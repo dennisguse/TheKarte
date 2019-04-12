@@ -11,82 +11,82 @@ Coordinates are exported in WGS84.
         <title>TheKarte-geocoder</title>
         <link rel="icon" type="image/svg+xml" href="img/TheKarte-logo.svg" />
         <link rel="icon" type="image/png" href="img/TheKarte-logo.png" sizes="96x96">
-    </head>
 
-    <style>
-    .dropArea {
-        height: 30em;
-        width: 30em;
-        margin-top: 1em;
-        margin-left: auto;
-        margin-right: auto;
-        border-style: dotted;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+        <style>
+        .dropArea {
+            height: 30em;
+            width: 30em;
+            margin-top: 1em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: dotted;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    </style>
+        </style>
 
-    <script>
-    /**
+        <script>
+        /**
 
-    @param {element} inputArea An input area containing one address per line.
-    */
-    function geocode(inputArea) {
-        const addresses = inputArea.value;
-        const addressList = addresses.split('\n');
-        const addressListTrimmed = addressList.map(a => a.trim());
+        @param {element} inputArea An input area containing one address per line.
+        */
+        function geocode(inputArea) {
+            const addresses = inputArea.value;
+            const addressList = addresses.split('\n');
+            const addressListTrimmed = addressList.map(a => a.trim());
 
-        console.log(addressListTrimmed);
+            console.log(addressListTrimmed);
 
-        coordinateList = new Array();
+            coordinateList = new Array();
 
-        //Requests address synchronuous.
-        for (let i = 0; i < addressListTrimmed.length; i++) {
-            if (addressList[i].length == 0) {
-                console.warn('Line ' + i + ' is empty or contains whitespaces only.');
-                coordinateList.push([addressList[i]]);
-            }
-
-            let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURI(addressList[i]);
-
-            console.log('Sending: ' + addressList[i]);
-            console.log('  Request-URL: ' + url);
-
-            let request = new XMLHttpRequest();
-            request.open("GET", url, false);
-            request.send(null);
-
-            if (request.status == 200) {
-                let json_response = JSON.parse(request.responseText);
-
-                if (json_response.length == 0) {
+            //Requests address synchronuous.
+            for (let i = 0; i < addressListTrimmed.length; i++) {
+                if (addressList[i].length == 0) {
+                    console.warn('Line ' + i + ' is empty or contains whitespaces only.');
                     coordinateList.push([addressList[i]]);
-                } else {
-                    coordinateList.push([addressList[i], json_response[0].lon, json_response[0].lat]);
-                    continue;
+                }
+
+                let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURI(addressList[i]);
+
+                console.log('Sending: ' + addressList[i]);
+                console.log('  Request-URL: ' + url);
+
+                let request = new XMLHttpRequest();
+                request.open("GET", url, false);
+                request.send(null);
+
+                if (request.status == 200) {
+                    let json_response = JSON.parse(request.responseText);
+
+                    if (json_response.length == 0) {
+                        coordinateList.push([addressList[i]]);
+                    } else {
+                        coordinateList.push([addressList[i], json_response[0].lon, json_response[0].lat]);
+                        continue;
+                    }
                 }
             }
+
+            inputArea.value = coordinateList.map(a => a.join(';')).join('\n');
         }
 
-        inputArea.value = coordinateList.map(a => a.join(';')).join('\n');
-    }
+        /**
+        Localization: parses stringified number.
+        Accounts for european decimal separator before parsing.
 
-    /**
-    Localization: parses stringified number.
-    Accounts for european decimal separator before parsing.
-
-    @param {string} str One stringified number.
-    */
-    function string2number(str) {
-        if (typeof str === 'string' && str.includes(',')) {
-            return str.replace(',', '.');
+        @param {string} str One stringified number.
+        */
+        function string2number(str) {
+            if (typeof str === 'string' && str.includes(',')) {
+                return str.replace(',', '.');
+            }
+            return str;
         }
-        return str;
-    }
 
-    </script>
+        </script>
+    </head>
 
     <body style="height:100%; margin: 0;">
         <div style="position: fixed; height: 100%; width: 100%; text-align: center; vertical-align: center">
