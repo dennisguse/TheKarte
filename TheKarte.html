@@ -11,6 +11,21 @@
             margin: 0px;
         }
 
+        .initialLogo {
+            position: fixed;
+            padding: 0;
+            top: 0;
+            left:0;
+            width: 100%;
+            height: 100%;
+
+            background-image: url("img/TheKarte-logo.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 30%;
+            background-color: white;
+        }
+
         #theKarteMap {
             width: 100%;
             height: 100%;
@@ -197,16 +212,17 @@
 
     <script>
     function onLoaded() {
+        var logElement = document.getElementById("logElement");
         if (theKarte === undefined) {
             //Some resources (JavaScript files) could not be loaded.
-            document.body.firstElementChild.innerHTML += "<br><i>One or more resources failed to load:<\/i> Please check in the brower's developer console.";
+            logElement.innerHTML += "<br><i>One or more resources failed to load:<\/i> Please check in the brower's developer console.";
             return;
         }
-        document.body.firstElementChild.innerHTML += "<br>All resources were loaded.";
+        logElement.innerHTML += "<br>All resources were loaded.";
 
         try {
             //Setup UI if all resources were loaded.
-            document.body.firstElementChild.innerHTML += "<br>Starting TheKarte...";
+            logElement.innerHTML += "<br>Starting TheKarte...";
 
             const theKarte_FeedbackElement = document.createElement("div");
             theKarte_FeedbackElement.id = "theKarteFeedback";
@@ -219,7 +235,8 @@
                 theKarte_FeedbackElement.className = isOk ? "feedbackOk" : "feedbackError";
             }.bind(this);
 
-            document.body.innerHTML = "";
+            logElement. parentNode.removeChild(logElement);
+
             const theKarte_MapElement = document.createElement("div");
             theKarte_MapElement.id = "theKarteMap";
             document.body.append(theKarte_MapElement);
@@ -249,9 +266,10 @@
     </head>
 
     <body onload="onLoaded()">
-        <p style="text-align:center">
+        <p id="logElement" style="text-align:center">
             TheKarte is loading...
         </p>
+        <div class="initialLogo" />
     </body>
 
 </html>
