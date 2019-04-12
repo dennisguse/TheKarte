@@ -1,6 +1,9 @@
 TheKarte
 ===
 
+![TheKarte: logo](img/TheKarte-logo.svg)
+
+
 _TheKarte_ is an interactive map application to visualize and to create geographical data.
 It was designed with two design criteria in mind:
 
