@@ -285,14 +285,13 @@
             }
 
             window.onbeforeunload = function(event) {
-                const text = "Do want to reload/close this application? All data will be lost.";
+                const text = "Do want to reload/close TheKarte? All data will be lost.";
                 event.returnValue = text;
                 return text;
             };
-
         } catch (e) {
             //Something went wrong...
-            document.body.firstElementChild.innerHTML += "<br><i>Failed to start TheKarte:<\/i> Please check in the brower's developer console.";
+            logElement.innerHTML += "<br><i>Failed to start TheKarte:<\/i> Please check in the brower's developer console.";
         }
     }
 
