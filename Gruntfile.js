@@ -54,12 +54,19 @@ module.exports = function(grunt) {
                 esversion: 6
             }
         },
+        revision: {
+            options: {
+                property: 'git.revision',
+                ref: 'HEAD',
+                short: false
+            }
+        },
         run: {
             jsdoc: {
                 exec: 'jsdoc --private -d doc src/*.js'
             },
             insertVersion: {
-                exec: 'sed -i -e "s>package.json:description><%= pkg.description %>>" -e "s>package.json:version><%= pkg.version %>>" -e "s>package.json:homepage><%= pkg.homepage.replace(">"> "\>") %>>g" -e "s>package.json:license><%= pkg.license %>>g" TheKarte.html'
+                exec: 'sed -i -e "s>package.json:description><%= pkg.description %>>" -e "s>package.json:version><%= pkg.version %>>" -e "s>git.revision><%= git.revision %>>" -e "s>package.json:homepage><%= pkg.homepage.replace(">"> "\>") %>>g" -e "s>package.json:license><%= pkg.license %>>g" TheKarte.html'
             },
             help: {
                 exec: 'grunt --help'
@@ -70,6 +77,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-assets-inline');
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-git-revision');
     grunt.loadNpmTasks('grunt-run');
 
     //Task(s)
@@ -79,5 +87,5 @@ module.exports = function(grunt) {
     grunt.registerTask('format', ['jsbeautifier']);
     grunt.registerTask('help', ['run:help']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('dist', ['run:insertVersion', 'run:jsdoc', 'assets_inline']);
+    grunt.registerTask('dist', ['revision', 'run:insertVersion', 'run:jsdoc', 'assets_inline']);
 };
