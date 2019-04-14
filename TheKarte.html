@@ -245,7 +245,7 @@
 
     <script>
     function onLoaded() {
-        var logElement = document.getElementById("logElement");
+        let logElement = document.getElementById("logElement");
         if (theKarte === undefined) {
             //Some resources (JavaScript files) could not be loaded.
             logElement.innerHTML += "<br><i>One or more resources failed to load:<\/i> Please check in the brower's developer console.";
@@ -257,10 +257,10 @@
             //Setup UI if all resources were loaded.
             logElement.innerHTML += "<br>Starting TheKarte...";
 
+            //Prepare userFeedback
             const theKarte_FeedbackElement = document.createElement("div");
             theKarte_FeedbackElement.id = "theKarteFeedback";
             document.body.append(theKarte_FeedbackElement);
-
             const userFeedbackCallback = function(isOk) {
                 theKarte_FeedbackElement.classList.remove("feedbackOk");
                 theKarte_FeedbackElement.classList.remove("feedbackError");
@@ -269,7 +269,7 @@
             }.bind(this);
 
             logElement.parentNode.removeChild(logElement);
-
+            //Create TheKarte
             const theKarte_MapElement = document.createElement("div");
             theKarte_MapElement.id = "theKarteMap";
             document.body.append(theKarte_MapElement);
@@ -279,7 +279,7 @@
 
             document.getElementById("logo").parentElement.title = versionInformation;
 
-            //Autopilot
+            //Start Autopilot
             let autopilotCommand = window.location.search.substr(1);
             if (autopilotCommand.length > 0) {
                 theKarte.autopilot(autopilotCommand.split('&'));

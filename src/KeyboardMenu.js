@@ -49,10 +49,10 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
 
     //Navigate up in menu
     if (currentKey === this._keyNavigateUp) {
+        event.stopPropagation();
         console.log(this.constructor.name + ": navigating up.");
         this._stack.pop();
         console.log(this.constructor.name + ": " + this._formatStack());
-        event.stopPropagation();
         this._userFeedbackCallback(true);
 
         if (actionMapSubset instanceof MenuActionMode) {
@@ -65,13 +65,13 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //Execute action
     if (currentKey === this._keyExecuteAction) {
         if (actionMapSubset instanceof MenuActionMode) {
+            event.stopPropagation();
             console.log(this.constructor.name + ": executing action. " + actionMapSubset.toString());
             this._userFeedbackCallback(true);
 
             actionMapSubset.stop();
 
             this._stack.pop();
-            event.stopPropagation();
         } else {
             console.warn(this.constructor.name + ": no action selected; nothing will happen.");
         }

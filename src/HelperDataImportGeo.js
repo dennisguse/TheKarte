@@ -15,7 +15,7 @@ Loads data from text.
 @return {Set<ol.Feature>|null}
 */
 function TheKarteHelperDataImport_loadGeoFromText(fileSuffix, fileContent) {
-    var format = TheKarteHelperDataImport_getOpenlayerFormat(fileSuffix);
+    let format = TheKarteHelperDataImport_getOpenlayerFormat(fileSuffix);
     if (format == null) {
         return;
     }
