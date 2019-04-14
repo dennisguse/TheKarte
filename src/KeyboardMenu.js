@@ -159,8 +159,14 @@ KeyboardMenu.prototype._formatStack = function(suffix) {
 /**
 Returns the menu structure as string.
 Calls {@link MenuActionAbstract}.toString().
+Execution is recursive.
+
+@param {map<char, MenuActionAbstract | Map<...>>} actionMapSubset
+@param {String} [prefix="  "] The prefix to be used to print.
 */
 KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
+    let _prefix = prefix === undefined ? "  " : prefix;
+
     if (actionMapSubset === undefined) {
         let result = "Keyboard-based menu:" +
             "\n  up: (" + this._keyNavigateUp + ")" +
@@ -176,9 +182,9 @@ KeyboardMenu.prototype.toString = function(actionMapSubset, prefix) {
 
         for (let [key, value] of actionMapSubset) {
             if (value instanceof Map) {
-                result += "\n" + prefix + "(" + key + ") " + this.toString(value, prefix + "  ");
+                result += "\n" + _prefix + "(" + key + ") " + this.toString(value, _prefix + _prefix);
             } else if (value !== null && value !== undefined) {
-                let current = prefix + "(" + key + ") ";
+                let current = _prefix + "(" + key + ") ";
                 result += "\n" + current + value.toString();
 
                 if (value.getDescription() != "") result += "\n" + " ".repeat(current.length) + value.getDescription();
