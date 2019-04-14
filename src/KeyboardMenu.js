@@ -8,6 +8,8 @@ Only one {@link MenuActionAbstract} can be in mode 'started' at any time.
 
 Only regular keys can be used as shortcuts and all keys are interpreted in lower case.
 
+When the stack changes or information is passed to {@link MenuActionAbstract}s, `this._navigationChangedCallback(this)` is executed.
+
 @param String keyExecuteAction Excute the currently selected {@link MenuActionMode} (if possible).
 @param String keyNavigateUp Navigate one step up in the menu structure.
 @param {map<char, MenuActionAbstract | Map<...>>} actionMap The map containing the {@link MenuActionAbstract}s.
@@ -17,7 +19,7 @@ function KeyboardMenu(keyExecuteAction, keyNavigateUp, actionMap) {
     this._keyNavigateUp = keyNavigateUp;
     this._actionMap = actionMap;
 
-
+    this._navigationChangedCallback = function() {};
     this._userFeedbackCallback = function() {};
     this._stack = [];
 }
@@ -32,6 +34,16 @@ KeyboardMenu.prototype.setUserFeedbackCallback = function(userFeedbackCallback) 
         return;
     }
     this._userFeedbackCallback = userFeedbackCallback;
+};
+/**
+@param {Function(keyboardMenu)}
+*/
+KeyboardMenu.prototype.setNavigationChangedCallback = function(navigationChangedCallback) {
+    if (!(navigationChangedCallback instanceof Function)) {
+        console.error(this.constructor.name + ".setNavigationChangedCallback: parameter must be a function.");
+        return;
+    }
+    this._navigationChangedCallback = navigationChangedCallback;
 };
 /**
 Handles the keypress and triggers actions if selected.
@@ -54,6 +66,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         this._stack.pop();
         console.log(this.constructor.name + ": " + this._formatStack());
         this._userFeedbackCallback(true);
+        this._navigationChangedCallback(this);
 
         if (actionMapSubset instanceof MenuActionMode) {
             actionMapSubset.abort();
@@ -68,6 +81,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
             event.stopPropagation();
             console.log(this.constructor.name + ": executing action. " + actionMapSubset.toString());
             this._userFeedbackCallback(true);
+            this._navigationChangedCallback(this);
 
             actionMapSubset.stop();
 
@@ -81,6 +95,8 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     //MenuActionMode should handle the event
     if (actionMapSubset instanceof MenuActionMode) {
         this._userFeedbackCallback(true);
+        this._navigationChangedCallback(this);
+
         actionMapSubset.handleKeyboardEvent(event);
         return;
     }
@@ -118,6 +134,8 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
                 console.log(this.constructor.name + ": starting " + actionMapNext.toString() + " " + actionMapNext.getDescription());
             }
         }
+        this._navigationChangedCallback(this);
+
         return;
     }
 
