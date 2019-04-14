@@ -87,5 +87,5 @@ module.exports = function(grunt) {
     grunt.registerTask('format', ['jsbeautifier']);
     grunt.registerTask('help', ['run:help']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('dist', ['revision', 'run:insertVersion', 'run:jsdoc', 'assets_inline']);
+    grunt.registerTask('dist', ['revision', 'run:insertVersion', 'assets_inline', 'run:jsdoc']);
 };
