@@ -106,7 +106,6 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         if (actionMapNext instanceof MenuActionAbstract) {
             console.log(this.constructor.name + ": " + this._formatStack(currentKey) + " executing " + actionMapNext.toString());
             actionMapNext.start();
-            return;
         }
 
         if (actionMapNext instanceof Map || actionMapNext instanceof MenuActionMode) {
