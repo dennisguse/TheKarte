@@ -44,6 +44,7 @@ KeyboardMenu.prototype.setNavigationChangedCallback = function(navigationChanged
         return;
     }
     this._navigationChangedCallback = navigationChangedCallback;
+    this._navigationChangedCallback(this);
 };
 /**
 Handles the keypress and triggers actions if selected.
@@ -64,7 +65,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         event.stopPropagation();
         console.log(this.constructor.name + ": navigating up.");
         this._stack.pop();
-        console.log(this.constructor.name + ": " + this._formatStack());
+        console.log(this.constructor.name + ": " + this.formatStack());
         this._userFeedbackCallback(true);
         this._navigationChangedCallback(this);
 
@@ -111,7 +112,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
     if (currentKey === null) {
         this._userFeedbackCallback(false);
         console.warn(this.constructor.name + ": (" + currentKey + ") not found in this (sub-)menu.");
-        console.log(this.constructor.name + ": " + this._formatStack());
+        console.log(this.constructor.name + ": " + this.formatStack());
         return;
     }
 
@@ -120,7 +121,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
         this._userFeedbackCallback(true);
 
         if (actionMapNext instanceof MenuActionAbstract) {
-            console.log(this.constructor.name + ": " + this._formatStack(currentKey) + " executing " + actionMapNext.toString());
+            console.log(this.constructor.name + ": " + this.formatStack(currentKey) + " executing " + actionMapNext.toString());
             actionMapNext.start();
         }
 
@@ -128,7 +129,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
             this._stack.push(currentKey);
 
             console.log(this.constructor.name + ": (" + currentKey + ") entering submenu.");
-            console.log(this.constructor.name + ": " + this._formatStack());
+            console.log(this.constructor.name + ": " + this.formatStack());
 
             if (actionMapNext instanceof MenuActionMode) {
                 console.log(this.constructor.name + ": starting " + actionMapNext.toString() + " " + actionMapNext.getDescription());
@@ -146,7 +147,7 @@ KeyboardMenu.prototype.handleKeypress = function(event) {
 /**
 Formats the stack to be printed to console.
 */
-KeyboardMenu.prototype._formatStack = function(suffix) {
+KeyboardMenu.prototype.formatStack = function(suffix) {
     let stack = this._stack;
 
     if (suffix !== undefined) {

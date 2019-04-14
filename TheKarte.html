@@ -9,6 +9,7 @@
         <style>
         body {
             margin: 0px;
+            overflow: hidden;
         }
 
         #initialLogo {
@@ -62,6 +63,39 @@
             position: absolute;
         }
 
+        #theKarteMenuUI {
+            position: absolute;
+            bottom: 1em;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            padding-left: 1em;
+            padding-right: 1em;
+
+            line-height: 3em;
+            vertical-align: middle;
+
+            user-select: none;
+
+            color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.3);
+
+            border-radius: 1em;
+
+            /* This is a workaround as the cursor is otherwise text.*/
+            cursor: pointer;
+
+            animation-name: logoFadeIn;
+            animation-duration: 1.5s;
+            animation-delay: 2s;
+            animation-fill-mode: forwards;
+        }
+
+        #theKarteMenuUI:hover {
+            color: rgba(0, 0, 0, 1);
+            transition: color 0.2s;
+        }
+
         #theKarteFeedback {
             box-sizing: border-box;
 
@@ -74,6 +108,7 @@
 
             pointer-events: none;
         }
+
 
         @keyframes feedbackAnimation {
             0% {
@@ -256,6 +291,19 @@
         try {
             //Setup UI if all resources were loaded.
             logElement.innerHTML += "<br>Starting TheKarte...";
+
+            //Setup menuUI
+            const theKarte_MenuUIElement = document.createElement("a");
+            theKarte_MenuUIElement.id = "theKarteMenuUI";
+            theKarte_MenuUIElement.onclick = function() {
+                new MenuActionHelp(theKarte).start();
+            };
+            document.body.append(theKarte_MenuUIElement);
+            const keyboardMenuNavigationCallback = function(keyboardMenu) {
+                theKarte_MenuUIElement.innerText = keyboardMenu.formatStack();
+            };
+
+            keyboardMenu.setNavigationChangedCallback(keyboardMenuNavigationCallback);
 
             //Prepare userFeedback
             const theKarte_FeedbackElement = document.createElement("div");
