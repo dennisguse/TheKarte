@@ -3,6 +3,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         assets_inline: {
             options: {
+                inlineLinkTags: true,
                 minify: false,
                 verbose: true
             },
