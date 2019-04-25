@@ -27,7 +27,11 @@ MenuActionHelp.prototype.start = function() {
         this._window.onunload = function(event) {
             this._window = null;
         }.bind(this);
+
+        return;
     }
+
+    this._window.close();
 };
 MenuActionHelp.prototype.toString = function() {
     return this.constructor.name;
