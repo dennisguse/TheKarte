@@ -17,6 +17,11 @@ MenuActionHelp.prototype.start = function() {
 
     if (this._window === null) {
         this._window = window.open("", "TheKarte-help", "modal=yes,alwaysRaised=yes");
+        if (this._window === null) {
+            console.warn("MenuActionHelp: cannot open help window. Are popups blocked?");
+
+            return;
+        }
         this._window.document.write("<pre>" + this._theKarte.menuToString() + "</pre>");
 
         this._window.onunload = function(event) {
