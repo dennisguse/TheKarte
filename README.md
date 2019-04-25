@@ -14,6 +14,8 @@ _TheKarte_ uses a VI-inspired menu for interacting with the map.
 Therefore, the application does not _contain_ any buttons or other UI components beside the map.
 Moreover, TheKarte is implemented as [single page application](https://en.wikipedia.org/wiki/Single-page_application).
 
+![Screenshot](demo/TheKarte-screenshot.png)
+
 ## Functionality
 Functionality for data handling:
 * draw features (e.g., circles, points and polygons) and delete features,
@@ -40,6 +42,10 @@ For background maps, see below.
 ## Getting started
 _TheKarte_ presents a UI consisting of a map, which is presented in full screen.
 As expected, a user can interact with the map using his mouse or touchscreen for panning and zooming.
+
+### Demos
+* Demonstration of the basic features: [demo/TheKarte-basic.mp4](demo/TheKarte-basic.mp4?raw=true) 
+* Demonstration on how to create images: [demo/TheKarte-image.mp4](demo/TheKarte-image.mp4?raw=true)
 
 ### Keyboard-based menu
 To access more advanced functionality the _keyboard-based menu_ needs to be used.
