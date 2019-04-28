@@ -162,17 +162,16 @@ class KeyboardMenu {
     Execution is recursive.
 
     @param {map<char, MenuActionAbstract | Map<...>>} actionMapSubset
-    @param {String} [prefix="  "] The prefix to be used to print.
+    @param {String} prefix The prefix to be used to print (only internal use).
+    @param {boolean} isTopMenu
     */
-    toString(actionMapSubset, prefix) {
-        let _prefix = prefix === undefined ? "  " : prefix;
-
+    toString(actionMapSubset, prefix, isTopMenu) {
         if (actionMapSubset === undefined) {
             let result = "Keyboard-based menu:" +
                 "\n  up: (" + this._keyNavigateUp + ")" +
                 "\n  execute: (" + this._keyExecuteAction + ")" +
                 "\n---" +
-                this.toString(this._actionMap, " ");
+                this.toString(this._actionMap, " ", true);
 
             return result;
         }
@@ -182,9 +181,14 @@ class KeyboardMenu {
 
             for (let [key, value] of actionMapSubset) {
                 if (value instanceof Map) {
-                    result += "\n" + _prefix + "(" + key + ") " + this.toString(value, _prefix + _prefix);
+                    //result += "\n";
+                    result += this.toString(value, prefix + (isTopMenu ? "" : ">") + key, false);
+                    result += "\n";
                 } else if (value !== null && value !== undefined) {
-                    let current = _prefix + "(" + key + ") ";
+                    let current = prefix;
+                    if (!isTopMenu) current += ">";
+                    current += key + " ";
+
                     result += "\n" + current + value.toString();
 
                     if (value.getDescription() != "") result += "\n" + " ".repeat(current.length) + value.getDescription();
