@@ -62,9 +62,8 @@ class KeyboardMenu {
         //Navigate up in menu
         if (currentKey === this._keyNavigateUp) {
             event.stopPropagation();
-            console.log(this.constructor.name + ": navigating up.");
             this._stack.pop();
-            console.log(this.constructor.name + ": " + this.formatStack());
+            console.log(this.constructor.name + ": navigating up. " + this.formatStack());
             this._userFeedbackCallback(true);
             this._navigationChangedCallback(this);
 
@@ -87,7 +86,7 @@ class KeyboardMenu {
 
                 this._stack.pop();
             } else {
-                console.warn(this.constructor.name + ": no action selected; nothing will happen.");
+                console.warn(this.constructor.name + ": no action selected; nothing will happen. " + this.formatStack());
             }
             return;
         }
@@ -104,14 +103,6 @@ class KeyboardMenu {
         //Could we navigate lower?
         if (!(actionMapSubset instanceof Map)) {
             this._userFeedbackCallback(false);
-            return;
-        }
-
-        //Is it a command key?
-        if (currentKey === null) {
-            this._userFeedbackCallback(false);
-            console.warn(this.constructor.name + ": (" + currentKey + ") not found in this (sub-)menu.");
-            console.log(this.constructor.name + ": " + this.formatStack());
             return;
         }
 
@@ -140,7 +131,7 @@ class KeyboardMenu {
         }
 
         this._userFeedbackCallback(false);
-        console.warn(this.constructor.name + ": (" + currentKey + ") no action associated; nothing will happen.");
+        console.warn(this.constructor.name + ": (" + currentKey + ") no action associated; nothing will happen. " + this.formatStack());
     }
 
     /**
