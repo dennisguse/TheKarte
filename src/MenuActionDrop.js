@@ -1,28 +1,27 @@
 /**
 A menu item that changes the handling of dropping text or files into TheKarte.
 
-@class MenuActionDrop
 @augments MenuActionAbstract
 @augments MenuActionOnce
-@constructor
-
-@param {DropHandler} dropHandler The dropHandler.
-@param {string} mode The mode to be set at dropHandler.
 */
-function MenuActionDrop(theKarte, dropHandler, mode) {
-    MenuActionMode.call(this, theKarte);
+class MenuActionDrop extends MenuActionOnce {
+    /**
+    @param {DropHandler} dropHandler The dropHandler.
+    @param {string} mode The mode to be set at dropHandler.
+    */
+    constructor(theKarte, dropHandler, mode) {
+        super(theKarte);
 
-    this._dropHandler = dropHandler;
-    this._mode = mode;
+        this._dropHandler = dropHandler;
+        this._mode = mode;
+    }
+    start() {
+        this._dropHandler.setMode(this._mode);
+    }
+    toString() {
+        return this.constructor.name + "(mode: " + this._mode + ")";
+    }
+    getDescription() {
+        return "Changes the mode on to process drag and dropped files.";
+    }
 }
-MenuActionDrop.prototype = Object.create(MenuActionOnce.prototype);
-MenuActionDrop.prototype.constructor = MenuActionDrop;
-MenuActionDrop.prototype.start = function() {
-    this._dropHandler.setMode(this._mode);
-};
-MenuActionDrop.prototype.toString = function() {
-    return this.constructor.name + "(mode: " + this._mode + ")";
-};
-MenuActionDrop.prototype.getDescription = function() {
-    return "Changes the mode on to process drag and dropped files.";
-};
