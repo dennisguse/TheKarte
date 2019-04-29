@@ -46,15 +46,20 @@ class KeyboardMenu {
         this._navigationChangedCallback(this);
     }
     /**
-    Handles the keypress and triggers actions if selected.
+    Navigate in actionMap to current level: search for current position in menu.
     */
-    handleKeypress(event) {
-        //Navigate in actionMap to current level: search for current position in menu.
+    _getActionMap() {
         let actionMapSubset = this._actionMap;
-
         for (let i = 0; i < this._stack.length; i++) {
             actionMapSubset = actionMapSubset.get(this._stack[i]);
         }
+        return actionMapSubset;
+    }
+    /**
+    Handles the keypress and triggers actions if selected.
+    */
+    handleKeypress(event) {
+        const actionMapSubset = this._getActionMap();
 
         let currentKey = event.key.toLowerCase();
         //console.info(this.constructor.name + ": got key (" + currentKey + ").");
@@ -78,13 +83,12 @@ class KeyboardMenu {
         if (currentKey === this._keyExecuteAction) {
             if (actionMapSubset instanceof MenuActionMode) {
                 event.stopPropagation();
+                this._stack.pop();
                 console.log(this.constructor.name + ": executing action. " + actionMapSubset.toString());
                 this._userFeedbackCallback(true);
                 this._navigationChangedCallback(this);
 
                 actionMapSubset.stop();
-
-                this._stack.pop();
             } else {
                 console.warn(this.constructor.name + ": no action selected; nothing will happen. " + this.formatStack());
             }
@@ -94,9 +98,9 @@ class KeyboardMenu {
         //MenuActionMode should handle the event
         if (actionMapSubset instanceof MenuActionMode) {
             this._userFeedbackCallback(true);
-            this._navigationChangedCallback(this);
-
             actionMapSubset.handleKeyboardEvent(event);
+
+            this._navigationChangedCallback(this);
             return;
         }
 
@@ -144,7 +148,14 @@ class KeyboardMenu {
             stack = stack.concat(suffix);
         }
 
-        return ["top"].concat(stack).map(x => "(" + x + ")").join(", ");
+        let result = ["top"].concat(stack).map(x => "(" + x + ")").join(", ");
+
+        const actionMap = this._getActionMap();
+        if (actionMap !== undefined && actionMap instanceof MenuActionMode && actionMap.getHandledKeyboardEvents() !== null) {
+            result += ": " + actionMap.getHandledKeyboardEvents();
+        }
+
+        return result;
     }
 
     /**

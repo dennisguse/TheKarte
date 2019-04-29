@@ -46,6 +46,9 @@ class MenuActionLayerSelect extends MenuActionMode {
     getDescription() {
         return "Select the active layer by index. Enter the index number (starting by 1) and press the execute key.";
     }
+    getHandledKeyboardEvents() {
+        return this._input === 0 ? null : this._input;
+    }
 }
 
 /**

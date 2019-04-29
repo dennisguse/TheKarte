@@ -52,6 +52,8 @@ class MenuActionOnce extends MenuActionAbstract {
 An abstract menu item that remains active until stopped or aborted.
 Can handle keyboard input when active.
 
+If necessary sub-classes should provide access to a might be used keyboard-buffer.
+
 @augments MenuActionAbstract
 */
 class MenuActionMode extends MenuActionAbstract {
@@ -83,4 +85,11 @@ class MenuActionMode extends MenuActionAbstract {
     @abstract
     */
     handleKeyboardEvent(event) {}
+
+    /**
+    @return The content of the keyboard buffer (if any is used).
+    */
+    getHandledKeyboardEvents() {
+        return null;
+    }
 }
