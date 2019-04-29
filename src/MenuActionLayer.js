@@ -38,7 +38,6 @@ class MenuActionLayerSelect extends MenuActionMode {
     }
     stop() {
         this._theKarte.layerActivate(this._input);
-        console.log(this.constructor.name + ": setting layer " + this._input + " active.");
     }
     abort() {
         this._input = 0;
