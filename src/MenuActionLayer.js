@@ -18,6 +18,7 @@ class MenuActionLayerAdd extends MenuActionOnce {
 
 /**
 A menu item that allows to select the active layer (by index).
+The index must be entered by keyboard.
 
 @augments MenuActionAbstract
 @augments MenuActionMode
@@ -47,6 +48,28 @@ class MenuActionLayerSelect extends MenuActionMode {
     }
     getHandledKeyboardEvents() {
         return this._input === 0 ? null : this._input;
+    }
+}
+
+/**
+A menu item that allows to select the active layer (by index).
+
+@augments MenuActionAbstract
+@augments MenuActionMode
+*/
+class MenuActionLayerSelectNow extends MenuActionOnce {
+    /**
+    @param {int} index The index to be selected.
+    */
+    constructor(theKarte, index) {
+        super(theKarte);
+        this._index = index;
+    }
+    start() {
+        this._theKarte.layerActivate(this._index);
+    }
+    getDescription() {
+        return "Select the active layer with index " + this._index + ".";
     }
 }
 
