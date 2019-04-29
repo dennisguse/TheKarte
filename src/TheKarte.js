@@ -230,11 +230,16 @@ class TheKarte {
     @param {int} index The VectorLayer to set as active (1..n).
     */
     layerActivate(index) {
-        if (1 <= index && index < this.getMap().getLayerGroup().getLayers().getLength()) { //Assume tile layer to be first.
-            this._layerActiveIndex = index;
-
+        if (!(1 <= index && index < this.getMap().getLayerGroup().getLayers().getLength())) { //Assume tile layer to be first.
+            console.warn(this.constructor.name + ".layerActivate(): no such layer with index  " + index + ". 1.." + (this.getMap().getLayerGroup().getLayers().getLength()) - 1 + " are currently valid.");
+            this.sendUserFeedback(false);
             return;
         }
+        console.log(this.constructor.name + ".layerActivate(): setting layer " + index + " active.");
+        this._layerActiveIndex = index;
+        this.sendUserFeedback(true);
+
+        return;
     }
     /**
     Delete the current active VectorLayer.
