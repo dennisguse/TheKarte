@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/css/reset.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/css/reveal.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/css/theme/black.css" id="theme">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.js"></script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>A tool to work with geo data</h1>
+				</section>
+
+				<section>
+					<h2>What is geo data?</h2>
+					<p>Use cases:</p>
+					<ul>
+						<li>locations (aka points)</li>
+						<li>areas</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>What is geo data?</h2>
+					<p>Use cases:</p>
+					<ul>
+						<li>view geo data</li>
+						<li>visualize attached data</li>
+						<li>"paint" new or edit geo data</li>
+						<li>filter data</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>(Business enviroment)</h2>
+					<p>What are common issue with geo data?</p>
+					<ul>
+						<li class="fragment fade-in">data format</li>
+						<li class="fragment fade-in">confidentiality</li>
+					</ul>
+
+					<p class="fragment fade-in">Problem: we had no tool for this...</p>
+				</section>
+
+				<section>
+					<p><b>Solution:</b> implement a tool</p>
+					<p class="fragment fade-in"><b>0_o</b></p>
+					<p class="fragment fade-in">Requirements:</p>
+					<ul>
+						<li class="fragment fade-in">(technical) stand-alone</li>
+						<li class="fragment fade-in">(technical) no manpower available</li>
+						<li class="fragment fade-in">(technical) easy to maintainable</li>
+						<li class="fragment fade-in">(user) use it all day</li>
+					</ul>
+				</section>
+
+				<section>
+					<p>Technical issues:</p>
+					<ul>
+						<li>load data</li>
+						<li>store data</li>
+					</ul>
+				</section>
+
+				<section>
+					<p>SOLUTION: A stand-alone web application.</p>
+
+					<ul>
+						<li>load data via DnD</li>
+						<li>save data as local download</li>
+						<li>(pro) scriptable via search URL</li>
+					</ul>
+
+					<p>All data is kept in the browser...</p>
+				</section>
+
+				<section>
+						<h2>Demo video 1</h2>
+					  <a href="TheKarte-basic.mp4" type="video/webm" target="_blank">Link</a>
+				</section>
+
+				<section>
+						<h2>Demo video 2</h2>
+						<a href="TheKarte-image.mp4" type="video/webm" target="_blank">Link</a>
+				</section>
+
+				<section>
+						<h2>Scripting demo</h2>
+						<a href="TheKarte.html?geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)&styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)" target="_blank">Link</a>
+
+						<p>Search parameter:</p>
+						<ul style="font-size:0.5em">
+							<li>geoURL(kml,https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml)</ol>
+							<li>styleImageURL(https://openlayers.org/en/latest/examples/resources/logo-70x70.png)</ol>
+						</ul>
+				</section>
+
+				<section>
+						<h2>Live demo?</h2>
+						<a href="TheKarte.html" target="_blank">Link</a>
+				</section>
+
+				<section>
+						<p>Code: <a href="https://github.com/dennisguse/thekarte" target="_blank">github.com/dennisguse/TheKarte</a></p>
+
+						<p>Dependencies: OpenLayers.js<p>
+				</section>
+			</div>
+		</div>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true },
+					{ src: 'plugin/search/search.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
