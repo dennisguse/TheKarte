@@ -45,7 +45,7 @@ function TheKarteHelperDataImport_getOpenlayerFormat(fileSuffix) {
 
     switch (fileSuffix.toLowerCase()) {
         case "gpx":
-            format = new ol.format.WKT();
+            format = new ol.format.GPX();
             break;
 
         case "geojson":
