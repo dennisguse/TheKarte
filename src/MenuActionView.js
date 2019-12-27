@@ -49,7 +49,7 @@ NOTE: Re-constructs all VectorLayers.
 @augments MenuActionAbstract
 @augments MenuActionOnce
 
-BUG Overwrites settings required for MenuActionViewClippingLayer.
+TODO BUG Overwrites settings required for MenuActionViewClippingLayer.
 */
 class MenuActionViewPerformance extends MenuActionOnce {
     /**
@@ -65,13 +65,19 @@ class MenuActionViewPerformance extends MenuActionOnce {
         for (let i = 0; i < collectionLayers.getLength(); i++) {
             let layer = collectionLayers.item(i);
 
-            if (layer instanceof ol.layer.Vector) {
-                let layerNew = new ol.layer.Vector({
-                    source: layer.getSource(),
-                    style: layer.getStyle(),
-                    renderMode: this._shouldBeFast ? "image" : "vector" //TODO should use ol.source.VectorRenderType.VECTOR
-                });
-
+            if (layer instanceof ol.layer.Vector || layer instanceof ol.layer.VectorImage) {
+                let layerNew;
+                if (this._shouldBeFast) {
+                    layerNew = new ol.layer.VectorImage({
+                        source: layer.getSource(),
+                        style: layer.getStyle(),
+                    });
+                } else {
+                    layerNew = new ol.layer.Vector({
+                        source: layer.getSource(),
+                        style: layer.getStyle(),
+                    });
+                }
                 this._theKarte.layerReplace(layerNew, i);
             }
         }
