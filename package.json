@@ -15,7 +15,7 @@
         "grunt-jsbeautifier": "^0.2.13",
         "grunt-run": "^0.8.1",
         "ol": "^5.3.3",
-        "papaparse": "^4.6.3"
+        "papaparse": "^5.2.0"
     },
     "dependencies": {
         "npm": "^6.14.6"
